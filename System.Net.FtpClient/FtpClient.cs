@@ -12,7 +12,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Globalization;
 using System.Net.FtpClient.Extensions;
 
-namespace System.Net.FtpClient {
+namespace System.Net.FtpClient
+{
     /// <summary>
     /// Event is fired when a ssl certificate needs to be validated
     /// </summary>
@@ -68,7 +69,8 @@ namespace System.Net.FtpClient {
     /// listing from the server.
     /// <code source="..\Examples\GetListing.cs" lang="cs" />
     /// </example>
-    public class FtpClient : IFtpClient {
+    public class FtpClient : IFtpClient
+    {
         /// <summary>
         /// Used for internally syncrhonizing access to this
         /// object from multiple threads
@@ -89,11 +91,14 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Gets a value indicating if this object has already been disposed.
         /// </summary>
-        public bool IsDisposed {
-            get {
+        public bool IsDisposed
+        {
+            get
+            {
                 return m_isDisposed;
             }
-            private set {
+            private set
+            {
                 m_isDisposed = value;
             }
         }
@@ -102,8 +107,10 @@ namespace System.Net.FtpClient {
         /// Gets the base stream for talking to the server via
         /// the control connection.
         /// </summary>
-        protected Stream BaseStream {
-            get {
+        protected Stream BaseStream
+        {
+            get
+            {
                 return m_stream;
             }
         }
@@ -119,11 +126,14 @@ namespace System.Net.FtpClient {
         /// ignore IPv6 addresses. The default value is ANY version.
         /// </summary>
         [FtpControlConnectionClone]
-        public FtpIpVersion InternetProtocolVersions {
-            get {
+        public FtpIpVersion InternetProtocolVersions
+        {
+            get
+            {
                 return m_ipVersions;
             }
-            set {
+            set
+            {
                 m_ipVersions = value;
             }
         }
@@ -139,42 +149,47 @@ namespace System.Net.FtpClient {
         /// The default value is 15 seconds.
         /// </summary>
         [FtpControlConnectionClone]
-        public int SocketPollInterval {
+        public int SocketPollInterval
+        {
             get { return m_socketPollInterval; }
-            set {
+            set
+            {
                 m_socketPollInterval = value;
                 if (m_stream != null)
                     m_stream.SocketPollInterval = value;
             }
         }
 
-		bool m_staleDataTest = true;
-		/// <summary>
-		/// Gets or sets a value indicating whether a test should be performed to
-		/// see if there is stale (unrequested data) sitting on the socket. In some
-		/// cases the control connection may time out but before the server closes
-		/// the connection it might send a 4xx response that was unexpected and
-		/// can cause synchronization errors with transactions. To avoid this
-		/// problem the Execute() method checks to see if there is any data
-		/// available on the socket before executing a command. On Azure hosting
-		/// platforms this check can cause an exception to be thrown. In order
-		/// to work around the exception you can set this property to false
-		/// which will skip the test entirely however doing so eliminates the
-		/// best effort attempt of detecting such scenarios. See this thread
-		/// for more details about the Azure problem:
-		/// https://netftp.codeplex.com/discussions/535879
-		/// </summary>
-		[FtpControlConnectionClone]
-		public bool StaleDataCheck {
-			get { return m_staleDataTest; }
-			set { m_staleDataTest = value; }
-		}
+        bool m_staleDataTest = true;
+        /// <summary>
+        /// Gets or sets a value indicating whether a test should be performed to
+        /// see if there is stale (unrequested data) sitting on the socket. In some
+        /// cases the control connection may time out but before the server closes
+        /// the connection it might send a 4xx response that was unexpected and
+        /// can cause synchronization errors with transactions. To avoid this
+        /// problem the Execute() method checks to see if there is any data
+        /// available on the socket before executing a command. On Azure hosting
+        /// platforms this check can cause an exception to be thrown. In order
+        /// to work around the exception you can set this property to false
+        /// which will skip the test entirely however doing so eliminates the
+        /// best effort attempt of detecting such scenarios. See this thread
+        /// for more details about the Azure problem:
+        /// https://netftp.codeplex.com/discussions/535879
+        /// </summary>
+        [FtpControlConnectionClone]
+        public bool StaleDataCheck
+        {
+            get { return m_staleDataTest; }
+            set { m_staleDataTest = value; }
+        }
 
         /// <summary>
         /// Gets a value indicating if the connection is alive
         /// </summary>
-        public bool IsConnected {
-            get {
+        public bool IsConnected
+        {
+            get
+            {
                 if (m_stream != null)
                     return m_stream.IsConnected;
                 return false;
@@ -190,11 +205,14 @@ namespace System.Net.FtpClient {
         /// to the developer.
         /// </summary>
         [FtpControlConnectionClone]
-        public bool EnableThreadSafeDataConnections {
-            get {
+        public bool EnableThreadSafeDataConnections
+        {
+            get
+            {
                 return m_threadSafeDataChannels;
             }
-            set {
+            set
+            {
                 m_threadSafeDataChannels = value;
             }
         }
@@ -208,11 +226,14 @@ namespace System.Net.FtpClient {
         /// object will be cloned for 2 or more resulting in N new connections to the
         /// server.
         /// </summary>
-        internal bool IsClone {
-            get {
+        internal bool IsClone
+        {
+            get
+            {
                 return m_isClone;
             }
-            private set {
+            private set
+            {
                 m_isClone = value;
             }
         }
@@ -227,16 +248,21 @@ namespace System.Net.FtpClient {
         /// regardless of what the server advertises, if anything.
         /// </summary>
         [FtpControlConnectionClone]
-        public Encoding Encoding {
-            get {
+        public Encoding Encoding
+        {
+            get
+            {
                 return m_textEncoding;
             }
-            set {
-                try {
+            set
+            {
+                try
+                {
                     m_lock.WaitOne();
-					m_textEncoding = value;
+                    m_textEncoding = value;
                 }
-                finally {
+                finally
+                {
                     m_lock.ReleaseMutex();
                 }
             }
@@ -247,11 +273,14 @@ namespace System.Net.FtpClient {
         /// The server to connect to
         /// </summary>
         [FtpControlConnectionClone]
-        public string Host {
-            get {
+        public string Host
+        {
+            get
+            {
                 return m_host;
             }
-            set {
+            set
+            {
                 m_host = value;
             }
         }
@@ -263,12 +292,16 @@ namespace System.Net.FtpClient {
         /// will automatically connect to port 21.
         /// </summary>
         [FtpControlConnectionClone]
-        public int Port {
-            get {
+        public int Port
+        {
+            get
+            {
                 // automatically determine port
                 // when m_port is 0.
-                if (m_port == 0) {
-                    switch (EncryptionMode) {
+                if (m_port == 0)
+                {
+                    switch (EncryptionMode)
+                    {
                         case FtpEncryptionMode.None:
                         case FtpEncryptionMode.Explicit:
                             return 21;
@@ -279,7 +312,8 @@ namespace System.Net.FtpClient {
 
                 return m_port;
             }
-            set {
+            set
+            {
                 m_port = value;
             }
         }
@@ -289,11 +323,14 @@ namespace System.Net.FtpClient {
         /// Credentials used for authentication
         /// </summary>
         [FtpControlConnectionClone]
-        public NetworkCredential Credentials {
-            get {
+        public NetworkCredential Credentials
+        {
+            get
+            {
                 return m_credentials;
             }
-            set {
+            set
+            {
                 m_credentials = value;
             }
         }
@@ -309,11 +346,14 @@ namespace System.Net.FtpClient {
         /// not recommended for obvious reasons (stack overflow).
         /// </summary>
         [FtpControlConnectionClone]
-        public int MaximumDereferenceCount {
-            get {
+        public int MaximumDereferenceCount
+        {
+            get
+            {
                 return m_maxDerefCount;
             }
-            set {
+            set
+            {
                 m_maxDerefCount = value;
             }
         }
@@ -323,11 +363,14 @@ namespace System.Net.FtpClient {
         /// Client certificates to be used in SSL authentication process
         /// </summary>
         [FtpControlConnectionClone]
-        public X509CertificateCollection ClientCertificates {
-            get {
+        public X509CertificateCollection ClientCertificates
+        {
+            get
+            {
                 return m_clientCerts;
             }
-            protected set {
+            protected set
+            {
                 m_clientCerts = value;
             }
         }
@@ -342,11 +385,14 @@ namespace System.Net.FtpClient {
         /// connection here.
         /// </summary>
         [FtpControlConnectionClone]
-        public FtpDataConnectionType DataConnectionType {
-            get {
+        public FtpDataConnectionType DataConnectionType
+        {
+            get
+            {
                 return m_dataConnectionType;
             }
-            set {
+            set
+            {
                 m_dataConnectionType = value;
             }
         }
@@ -358,11 +404,14 @@ namespace System.Net.FtpClient {
         /// when closing the control connection.
         /// </summary>
         [FtpControlConnectionClone]
-        public bool UngracefullDisconnection {
-            get {
+        public bool UngracefullDisconnection
+        {
+            get
+            {
                 return m_ungracefullDisconnect;
             }
-            set {
+            set
+            {
                 m_ungracefullDisconnect = value;
             }
         }
@@ -373,11 +422,14 @@ namespace System.Net.FtpClient {
         /// attempt to succeed before giving up. Default is 15000 (15 seconds).
         /// </summary>
         [FtpControlConnectionClone]
-        public int ConnectTimeout {
-            get {
+        public int ConnectTimeout
+        {
+            get
+            {
                 return m_connectTimeout;
             }
-            set {
+            set
+            {
                 m_connectTimeout = value;
             }
         }
@@ -388,11 +440,14 @@ namespace System.Net.FtpClient {
         /// read from the underlying stream. The default value is 15000 (15 seconds).
         /// </summary>
         [FtpControlConnectionClone]
-        public int ReadTimeout {
-            get {
+        public int ReadTimeout
+        {
+            get
+            {
                 return m_readTimeout;
             }
-            set {
+            set
+            {
                 m_readTimeout = value;
             }
         }
@@ -403,11 +458,14 @@ namespace System.Net.FtpClient {
         /// to be established before giving up. Default is 15000 (15 seconds).
         /// </summary>
         [FtpControlConnectionClone]
-        public int DataConnectionConnectTimeout {
-            get {
+        public int DataConnectionConnectTimeout
+        {
+            get
+            {
                 return m_dataConnectionConnectTimeout;
             }
-            set {
+            set
+            {
                 m_dataConnectionConnectTimeout = value;
             }
         }
@@ -419,11 +477,14 @@ namespace System.Net.FtpClient {
         /// 15000 (15 seconds).
         /// </summary>
         [FtpControlConnectionClone]
-        public int DataConnectionReadTimeout {
-            get {
+        public int DataConnectionReadTimeout
+        {
+            get
+            {
                 return m_dataConnectionReadTimeout;
             }
-            set {
+            set
+            {
                 m_dataConnectionReadTimeout = value;
             }
         }
@@ -438,11 +499,14 @@ namespace System.Net.FtpClient {
         /// data connections already in progress. The default value is false.
         /// </summary>
         [FtpControlConnectionClone]
-        public bool SocketKeepAlive {
-            get {
+        public bool SocketKeepAlive
+        {
+            get
+            {
                 return m_keepAlive;
             }
-            set {
+            set
+            {
                 m_keepAlive = value;
                 if (m_stream != null)
                     m_stream.SetSocketOption(Sockets.SocketOptionLevel.Socket, Sockets.SocketOptionName.KeepAlive, value);
@@ -454,15 +518,19 @@ namespace System.Net.FtpClient {
         /// Gets the server capabilties represented by flags
         /// </summary>
         [FtpControlConnectionClone]
-        public FtpCapability Capabilities {
-            get {
-                if (m_stream == null || !m_stream.IsConnected) {
+        public FtpCapability Capabilities
+        {
+            get
+            {
+                if (m_stream == null || !m_stream.IsConnected)
+                {
                     Connect();
                 }
 
                 return m_caps;
             }
-            protected set {
+            protected set
+            {
                 m_caps = value;
             }
         }
@@ -475,15 +543,19 @@ namespace System.Net.FtpClient {
         /// more details:
         /// http://tools.ietf.org/html/draft-bryan-ftpext-hash-02
         /// </summary>
-        public FtpHashAlgorithm HashAlgorithms {
-            get {
-                if (m_stream == null || !m_stream.IsConnected) {
+        public FtpHashAlgorithm HashAlgorithms
+        {
+            get
+            {
+                if (m_stream == null || !m_stream.IsConnected)
+                {
                     Connect();
                 }
 
                 return m_hashAlgorithms;
             }
-            private set {
+            private set
+            {
                 m_hashAlgorithms = value;
             }
         }
@@ -493,11 +565,14 @@ namespace System.Net.FtpClient {
         /// Type of SSL to use, or none. Default is none. Explicit is TLS, Implicit is SSL.
         /// </summary>
         [FtpControlConnectionClone]
-        public FtpEncryptionMode EncryptionMode {
-            get {
+        public FtpEncryptionMode EncryptionMode
+        {
+            get
+            {
                 return m_encryptionmode;
             }
-            set {
+            set
+            {
                 m_encryptionmode = value;
             }
         }
@@ -508,11 +583,14 @@ namespace System.Net.FtpClient {
         /// property is not equal to FtpSslMode.None.
         /// </summary>
         [FtpControlConnectionClone]
-        public bool DataConnectionEncryption {
-            get {
+        public bool DataConnectionEncryption
+        {
+            get
+            {
                 return m_dataConnectionEncryption;
             }
-            set {
+            set
+            {
                 m_dataConnectionEncryption = value;
             }
         }
@@ -524,11 +602,14 @@ namespace System.Net.FtpClient {
         /// the connection will be aborted.
         /// </summary>
         /// <example><code source="..\Examples\ValidateCertificate.cs" lang="cs" /></example>
-        public event FtpSslValidation ValidateCertificate {
-            add {
+        public event FtpSslValidation ValidateCertificate
+        {
+            add
+            {
                 m_sslvalidate += value;
             }
-            remove {
+            remove
+            {
                 m_sslvalidate -= value;
             }
         }
@@ -537,8 +618,10 @@ namespace System.Net.FtpClient {
         /// Gets the type of system/server that we're
         /// connected to.
         /// </summary>
-        public string SystemType {
-            get {
+        public string SystemType
+        {
+            get
+            {
                 FtpReply reply = Execute("SYST");
 
                 if (reply.Success)
@@ -554,7 +637,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="cap">The capability to check for</param>
         /// <returns>True if the feature was found</returns>
-        public bool HasFeature(FtpCapability cap) {
+        public bool HasFeature(FtpCapability cap)
+        {
             return ((this.Capabilities & cap) == cap);
         }
 
@@ -562,7 +646,8 @@ namespace System.Net.FtpClient {
         /// Fires the SSL validation event
         /// </summary>
         /// <param name="e">Event Args</param>
-        void OnValidateCertficate(FtpSslValidationEventArgs e) {
+        void OnValidateCertficate(FtpSslValidationEventArgs e)
+        {
             FtpSslValidation evt;
 
             evt = m_sslvalidate;
@@ -577,18 +662,22 @@ namespace System.Net.FtpClient {
         /// <typeparam name="T">Type of delegate to retrieve</typeparam>
         /// <param name="ar">The IAsyncResult to retrieve the delegate for</param>
         /// <returns>The delegate that generated the specified IAsyncResult</returns>
-        protected T GetAsyncDelegate<T>(IAsyncResult ar) {
+        protected T GetAsyncDelegate<T>(IAsyncResult ar)
+        {
             T func;
 
-            lock (m_asyncmethods) {
-                if (m_isDisposed) {
+            lock (m_asyncmethods)
+            {
+                if (m_isDisposed)
+                {
                     throw new ObjectDisposedException("This connection object has already been disposed.");
                 }
 
                 if (!m_asyncmethods.ContainsKey(ar))
                     throw new InvalidOperationException("The specified IAsyncResult could not be located.");
 
-                if (!(m_asyncmethods[ar] is T)) {
+                if (!(m_asyncmethods[ar] is T))
+                {
                     StackTrace st = new StackTrace(1);
 
                     throw new InvalidCastException("The AsyncResult cannot be matched to the specified delegate. " +
@@ -609,15 +698,18 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <returns>A new control connection with the same property settings as this one</returns>
         /// <example><code source="..\Examples\CloneConnection.cs" lang="cs" /></example>
-        protected FtpClient CloneConnection() {
+        protected FtpClient CloneConnection()
+        {
             FtpClient conn = new FtpClient();
 
             conn.m_isClone = true;
 
-            foreach (PropertyInfo prop in GetType().GetProperties()) {
+            foreach (PropertyInfo prop in GetType().GetProperties())
+            {
                 object[] attributes = prop.GetCustomAttributes(typeof(FtpControlConnectionClone), true);
 
-                if (attributes != null && attributes.Length > 0) {
+                if (attributes != null && attributes.Length > 0)
+                {
                     prop.SetValue(conn, prop.GetValue(this, null), null);
                 }
             }
@@ -626,7 +718,8 @@ namespace System.Net.FtpClient {
             // gets here it means the certificate on the control connection object being
             // cloned was already accepted.
             conn.ValidateCertificate += new FtpSslValidation(
-                delegate(FtpClient obj, FtpSslValidationEventArgs e) {
+                delegate(FtpClient obj, FtpSslValidationEventArgs e)
+                {
                     e.Accept = true;
                 });
 
@@ -641,23 +734,27 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <returns>FtpReply representing the response from the server</returns>
         /// <example><code source="..\Examples\BeginGetReply.cs" lang="cs" /></example>
-        internal FtpReply GetReply() {
+        internal FtpReply GetReply()
+        {
             FtpReply reply = new FtpReply();
             string buf;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 if (!IsConnected)
                     throw new InvalidOperationException("No connection to the server has been established.");
 
                 m_stream.ReadTimeout = m_readTimeout;
-                while ((buf = m_stream.ReadLine(Encoding)) != null) {
+                while ((buf = m_stream.ReadLine(Encoding)) != null)
+                {
                     Match m;
 
                     FtpTrace.WriteLine(buf);
 
-                    if ((m = Regex.Match(buf, "^(?<code>[0-9]{3}) (?<message>.*)$")).Success) {
+                    if ((m = Regex.Match(buf, "^(?<code>[0-9]{3}) (?<message>.*)$")).Success)
+                    {
                         reply.Code = m.Groups["code"].Value;
                         reply.Message = m.Groups["message"].Value;
                         break;
@@ -666,7 +763,8 @@ namespace System.Net.FtpClient {
                     reply.InfoMessages += string.Format("{0}\n", buf);
                 }
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
@@ -680,7 +778,8 @@ namespace System.Net.FtpClient {
         /// <param name="args">Format parameters to the command</param>
         /// <returns>The servers reply to the command</returns>
         /// <example><code source="..\Examples\Execute.cs" lang="cs" /></example>
-        public FtpReply Execute(string command, params object[] args) {
+        public FtpReply Execute(string command, params object[] args)
+        {
             return Execute(string.Format(command, args));
         }
 
@@ -690,34 +789,42 @@ namespace System.Net.FtpClient {
         /// <param name="command">The command to execute</param>
         /// <returns>The servers reply to the command</returns>
         /// <example><code source="..\Examples\Execute.cs" lang="cs" /></example>
-        public FtpReply Execute(string command) {
+        public FtpReply Execute(string command)
+        {
             FtpReply reply;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
-				if(StaleDataCheck) {
-	                if (m_stream != null && m_stream.SocketDataAvailable > 0) {
-	                    // Data shouldn't be on the socket, if it is it probably
-	                    // means we've been disconnected. Read and discard
-	                    // whatever is there and close the connection.
+                if (StaleDataCheck)
+                {
+                    if (m_stream != null && m_stream.SocketDataAvailable > 0)
+                    {
+                        // Data shouldn't be on the socket, if it is it probably
+                        // means we've been disconnected. Read and discard
+                        // whatever is there and close the connection.
 
-	                    FtpTrace.WriteLine("There is stale data on the socket, maybe our connection timed out. Re-connecting.");
-	                    if (m_stream.IsConnected && !m_stream.IsEncrypted) {
-	                        byte[] buf = new byte[m_stream.SocketDataAvailable];
-	                        m_stream.RawSocketRead(buf);
-	                        FtpTrace.Write("The data was: ");
-	                        FtpTrace.WriteLine(Encoding.GetString(buf).TrimEnd('\r', '\n'));
-	                    }
+                        FtpTrace.WriteLine("There is stale data on the socket, maybe our connection timed out. Re-connecting.");
+                        if (m_stream.IsConnected && !m_stream.IsEncrypted)
+                        {
+                            byte[] buf = new byte[m_stream.SocketDataAvailable];
+                            m_stream.RawSocketRead(buf);
+                            FtpTrace.Write("The data was: ");
+                            FtpTrace.WriteLine(Encoding.GetString(buf).TrimEnd('\r', '\n'));
+                        }
 
-	                    m_stream.Close();
-	                }
-				}
+                        m_stream.Close();
+                    }
+                }
 
-                if (!IsConnected) {
-                    if (command == "QUIT") {
+                if (!IsConnected)
+                {
+                    if (command == "QUIT")
+                    {
                         FtpTrace.WriteLine("Not sending QUIT because the connection has already been closed.");
-                        return new FtpReply() {
+                        return new FtpReply()
+                        {
                             Code = "200",
                             Message = "Connection already closed."
                         };
@@ -730,7 +837,8 @@ namespace System.Net.FtpClient {
                 m_stream.WriteLine(m_textEncoding, command);
                 reply = GetReply();
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
@@ -747,12 +855,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginExecute.cs" lang="cs" /></example>
-        public IAsyncResult BeginExecute(string command, AsyncCallback callback, object state) {
+        public IAsyncResult BeginExecute(string command, AsyncCallback callback, object state)
+        {
             AsyncExecute func;
             IAsyncResult ar;
 
             ar = (func = new AsyncExecute(Execute)).BeginInvoke(command, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -765,7 +875,8 @@ namespace System.Net.FtpClient {
         /// <param name="ar">IAsyncResult returned from BeginExecute</param>
         /// <returns>FtpReply object (never null).</returns>
         /// <example><code source="..\Examples\BeginExecute.cs" lang="cs" /></example>
-        public FtpReply EndExecute(IAsyncResult ar) {
+        public FtpReply EndExecute(IAsyncResult ar)
+        {
             return GetAsyncDelegate<AsyncExecute>(ar).EndInvoke(ar);
         }
 
@@ -773,16 +884,19 @@ namespace System.Net.FtpClient {
         /// Connect to the server. Throws ObjectDisposedException if this object has been disposed.
         /// </summary>
         /// <example><code source="..\Examples\Connect.cs" lang="cs" /></example>
-        public virtual void Connect() {
+        public virtual void Connect()
+        {
             FtpReply reply;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 if (IsDisposed)
                     throw new ObjectDisposedException("This FtpClient object has been disposed. It is no longer accessible.");
 
-                if (m_stream == null) {
+                if (m_stream == null)
+                {
                     m_stream = new FtpSocketStream();
                     m_stream.ValidateCertificate += new FtpSocketStreamSslValidation(FireValidateCertficate);
                 }
@@ -807,27 +921,33 @@ namespace System.Net.FtpClient {
                     m_stream.ActivateEncryption(Host,
                         m_clientCerts.Count > 0 ? m_clientCerts : null);
 
-                if (!(reply = GetReply()).Success) {
-                    if (reply.Code == null) {
+                if (!(reply = GetReply()).Success)
+                {
+                    if (reply.Code == null)
+                    {
                         throw new IOException("The connection was terminated before a greeting could be read.");
                     }
-                    else {
+                    else
+                    {
                         throw new FtpCommandException(reply);
                     }
                 }
 
-                if (EncryptionMode == FtpEncryptionMode.Explicit) {
+                if (EncryptionMode == FtpEncryptionMode.Explicit)
+                {
                     if (!(reply = Execute("AUTH TLS")).Success)
                         throw new FtpSecurityNotAvailableException("AUTH TLS command failed.");
                     m_stream.ActivateEncryption(Host,
                         m_clientCerts.Count > 0 ? m_clientCerts : null);
                 }
 
-                if (m_credentials != null) {
+                if (m_credentials != null)
+                {
                     Authenticate();
                 }
 
-                if (m_stream.IsEncrypted && DataConnectionEncryption) {
+                if (m_stream.IsEncrypted && DataConnectionEncryption)
+                {
                     if (!(reply = Execute("PBSZ 0")).Success)
                         throw new FtpCommandException(reply);
                     if (!(reply = Execute("PROT P")).Success)
@@ -838,27 +958,32 @@ namespace System.Net.FtpClient {
                 // should have already been loaded
                 // so save some bandwidth and CPU
                 // time and skip executing this again.
-                if (!IsClone) {
-                    if ((reply = Execute("FEAT")).Success && reply.InfoMessages != null) {
+                if (!IsClone)
+                {
+                    if ((reply = Execute("FEAT")).Success && reply.InfoMessages != null)
+                    {
                         GetFeatures(reply);
                     }
                 }
 
-				// Enable UTF8 if the encoding is ASCII and UTF8 is supported
-				if (m_textEncoding == Encoding.ASCII && HasFeature(FtpCapability.UTF8)) {
-					m_textEncoding = Encoding.UTF8;
+                // Enable UTF8 if the encoding is ASCII and UTF8 is supported
+                if (m_textEncoding == Encoding.ASCII && HasFeature(FtpCapability.UTF8))
+                {
+                    m_textEncoding = Encoding.UTF8;
                 }
 
                 FtpTrace.WriteLine("Text encoding: " + m_textEncoding.ToString());
 
-                if (m_textEncoding == Encoding.UTF8) {
+                if (m_textEncoding == Encoding.UTF8)
+                {
                     // If the server supports UTF8 it should already be enabled and this
                     // command should not matter however there are conflicting drafts
                     // about this so we'll just execute it to be safe. 
                     Execute("OPTS UTF8 ON");
                 }
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
         }
@@ -868,7 +993,8 @@ namespace System.Net.FtpClient {
         /// that the login procedure can be changed to support, for example,
         /// a FTP proxy.
         /// </summary>
-        protected virtual void Authenticate() {
+        protected virtual void Authenticate()
+        {
             FtpReply reply;
 
             if (!(reply = Execute("USER {0}", Credentials.UserName)).Success)
@@ -886,8 +1012,10 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="reply">The reply object from the FEAT command. The InfoMessages property will
         /// contain a list of the features the server supported delimited by a new line '\n' character.</param>
-        protected virtual void GetFeatures(FtpReply reply) {
-            foreach (string feat in reply.InfoMessages.Split('\n')) {
+        protected virtual void GetFeatures(FtpReply reply)
+        {
+            foreach (string feat in reply.InfoMessages.Split('\n'))
+            {
                 if (feat.ToUpper().Trim().StartsWith("MLST") || feat.ToUpper().Trim().StartsWith("MLSD"))
                     m_caps |= FtpCapability.MLSD;
                 else if (feat.ToUpper().Trim().StartsWith("MDTM"))
@@ -918,14 +1046,18 @@ namespace System.Net.FtpClient {
                     m_caps |= FtpCapability.XSHA256;
                 else if (feat.ToUpper().Trim().StartsWith("XSHA512"))
                     m_caps |= FtpCapability.XSHA512;
-                else if (feat.ToUpper().Trim().StartsWith("HASH")) {
+                else if (feat.ToUpper().Trim().StartsWith("HASH"))
+                {
                     Match m;
 
                     m_caps |= FtpCapability.HASH;
 
-                    if ((m = Regex.Match(feat.ToUpper().Trim(), @"^HASH\s+(?<types>.*)$")).Success) {
-                        foreach (string type in m.Groups["types"].Value.Split(';')) {
-                            switch (type.ToUpper().Trim()) {
+                    if ((m = Regex.Match(feat.ToUpper().Trim(), @"^HASH\s+(?<types>.*)$")).Success)
+                    {
+                        foreach (string type in m.Groups["types"].Value.Split(';'))
+                        {
+                            switch (type.ToUpper().Trim())
+                            {
                                 case "SHA-1":
                                 case "SHA-1*":
                                     m_hashAlgorithms |= FtpHashAlgorithm.SHA1;
@@ -962,13 +1094,15 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginConnect.cs" lang="cs" /></example>
-        public IAsyncResult BeginConnect(AsyncCallback callback, object state) {
+        public IAsyncResult BeginConnect(AsyncCallback callback, object state)
+        {
             AsyncConnect func;
             IAsyncResult ar;
 
             ar = (func = new AsyncConnect(Connect)).BeginInvoke(callback, state);
 
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -980,7 +1114,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="ar">IAsyncResult returned from BeginConnect()</param>
         /// <example><code source="..\Examples\BeginConnect.cs" lang="cs" /></example>
-        public void EndConnect(IAsyncResult ar) {
+        public void EndConnect(IAsyncResult ar)
+        {
             GetAsyncDelegate<AsyncConnect>(ar).EndInvoke(ar);
         }
 
@@ -990,41 +1125,53 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="stream">The stream that fired the event</param>
         /// <param name="e">The event args used to validate the certficate</param>
-        void FireValidateCertficate(FtpSocketStream stream, FtpSslValidationEventArgs e) {
+        void FireValidateCertficate(FtpSocketStream stream, FtpSslValidationEventArgs e)
+        {
             OnValidateCertficate(e);
         }
 
         /// <summary>
         /// Disconnect from the server
         /// </summary>
-        public virtual void Disconnect() {
-            try {
+        public virtual void Disconnect()
+        {
+            try
+            {
                 m_lock.WaitOne();
 
-                if (m_stream != null && m_stream.IsConnected) {
-                    try {
-                        if (!UngracefullDisconnection) {
+                if (m_stream != null && m_stream.IsConnected)
+                {
+                    try
+                    {
+                        if (!UngracefullDisconnection)
+                        {
                             Execute("QUIT");
                         }
                     }
-                    catch (SocketException sockex) {
+                    catch (SocketException sockex)
+                    {
                         FtpTrace.WriteLine("FtpClient.Disconnect(): SocketException caught and discarded while closing control connection: {0}", sockex.ToString());
                     }
-                    catch (IOException ioex) {
+                    catch (IOException ioex)
+                    {
                         FtpTrace.WriteLine("FtpClient.Disconnect(): IOException caught and discarded while closing control connection: {0}", ioex.ToString());
                     }
-                    catch (FtpCommandException cmdex) {
+                    catch (FtpCommandException cmdex)
+                    {
                         FtpTrace.WriteLine("FtpClient.Disconnect(): FtpCommandException caught and discarded while closing control connection: {0}", cmdex.ToString());
                     }
-                    catch (FtpException ftpex) {
+                    catch (FtpException ftpex)
+                    {
                         FtpTrace.WriteLine("FtpClient.Disconnect(): FtpException caught and discarded while closing control connection: {0}", ftpex.ToString());
                     }
-                    finally {
+                    finally
+                    {
                         m_stream.Close();
                     }
                 }
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
         }
@@ -1038,12 +1185,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginDisconnect.cs" lang="cs" /></example>
-        public IAsyncResult BeginDisconnect(AsyncCallback callback, object state) {
+        public IAsyncResult BeginDisconnect(AsyncCallback callback, object state)
+        {
             IAsyncResult ar;
             AsyncDisconnect func;
 
             ar = (func = new AsyncDisconnect(Disconnect)).BeginInvoke(callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -1055,7 +1204,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="ar">IAsyncResult returned from BeginDisconnect</param>
         /// <example><code source="..\Examples\BeginConnect.cs" lang="cs" /></example>
-        public void EndDisconnect(IAsyncResult ar) {
+        public void EndDisconnect(IAsyncResult ar)
+        {
             GetAsyncDelegate<AsyncDisconnect>(ar).EndInvoke(ar);
         }
 
@@ -1066,7 +1216,8 @@ namespace System.Net.FtpClient {
         /// <param name="command">The command to execute that requires a data stream</param>
         /// <param name="restart">Restart location in bytes for file transfer</param>
         /// <returns>A data stream ready to be used</returns>
-        FtpDataStream OpenPassiveDataStream(FtpDataConnectionType type, string command, long restart) {
+        FtpDataStream OpenPassiveDataStream(FtpDataConnectionType type, string command, long restart)
+        {
             FtpDataStream stream = null;
             FtpReply reply;
             Match m;
@@ -1076,8 +1227,10 @@ namespace System.Net.FtpClient {
             if (m_stream == null)
                 throw new InvalidOperationException("The control connection stream is null! Generally this means there is no connection to the server. Cannot open a passive data stream.");
 
-            if (type == FtpDataConnectionType.EPSV || type == FtpDataConnectionType.AutoPassive) {
-                if (!(reply = Execute("EPSV")).Success) {
+            if (type == FtpDataConnectionType.EPSV || type == FtpDataConnectionType.AutoPassive)
+            {
+                if (!(reply = Execute("EPSV")).Success)
+                {
                     // if we're connected with IPv4 and data channel type is AutoPassive then fallback to IPv4
                     if (reply.Type == FtpResponseType.PermanentNegativeCompletion && type == FtpDataConnectionType.AutoPassive && m_stream != null && m_stream.LocalEndPoint.AddressFamily == Sockets.AddressFamily.InterNetwork)
                         return OpenPassiveDataStream(FtpDataConnectionType.PASV, command, restart);
@@ -1085,14 +1238,16 @@ namespace System.Net.FtpClient {
                 }
 
                 m = Regex.Match(reply.Message, @"\(\|\|\|(?<port>\d+)\|\)");
-                if (!m.Success) {
+                if (!m.Success)
+                {
                     throw new FtpException("Failed to get the EPSV port from: " + reply.Message);
                 }
 
                 host = m_host;
                 port = int.Parse(m.Groups["port"].Value);
             }
-            else {
+            else
+            {
                 if (m_stream.LocalEndPoint.AddressFamily != Sockets.AddressFamily.InterNetwork)
                     throw new FtpException("Only IPv4 is supported by the PASV command. Use EPSV instead.");
 
@@ -1130,12 +1285,14 @@ namespace System.Net.FtpClient {
             stream.Connect(host, port, InternetProtocolVersions);
             stream.SetSocketOption(Sockets.SocketOptionLevel.Socket, Sockets.SocketOptionName.KeepAlive, m_keepAlive);
 
-            if (restart > 0) {
+            if (restart > 0)
+            {
                 if (!(reply = Execute("REST {0}", restart)).Success)
                     throw new FtpCommandException(reply);
             }
 
-            if (!(reply = Execute(command)).Success) {
+            if (!(reply = Execute(command)).Success)
+            {
                 stream.Close();
                 throw new FtpCommandException(reply);
             }
@@ -1161,7 +1318,8 @@ namespace System.Net.FtpClient {
         /// <param name="command">The command to execute that requires a data stream</param>
         /// <param name="restart">Restart location in bytes for file transfer</param>
         /// <returns>A data stream ready to be used</returns>
-        FtpDataStream OpenActiveDataStream(FtpDataConnectionType type, string command, long restart) {
+        FtpDataStream OpenActiveDataStream(FtpDataConnectionType type, string command, long restart)
+        {
             FtpDataStream stream = new FtpDataStream(this);
             FtpReply reply;
             IAsyncResult ar;
@@ -1172,10 +1330,12 @@ namespace System.Net.FtpClient {
             stream.Listen(m_stream.LocalEndPoint.Address, 0);
             ar = stream.BeginAccept(null, null);
 
-            if (type == FtpDataConnectionType.EPRT || type == FtpDataConnectionType.AutoActive) {
+            if (type == FtpDataConnectionType.EPRT || type == FtpDataConnectionType.AutoActive)
+            {
                 int ipver = 0;
 
-                switch (stream.LocalEndPoint.AddressFamily) {
+                switch (stream.LocalEndPoint.AddressFamily)
+                {
                     case Sockets.AddressFamily.InterNetwork:
                         ipver = 1; // IPv4
                         break;
@@ -1187,39 +1347,46 @@ namespace System.Net.FtpClient {
                 }
 
                 if (!(reply = Execute("EPRT |{0}|{1}|{2}|", ipver,
-                    stream.LocalEndPoint.Address.ToString(), stream.LocalEndPoint.Port)).Success) {
+                    stream.LocalEndPoint.Address.ToString(), stream.LocalEndPoint.Port)).Success)
+                {
 
                     // if we're connected with IPv4 and the data channel type is AutoActive then try to fall back to the PORT command
-                    if (reply.Type == FtpResponseType.PermanentNegativeCompletion && type == FtpDataConnectionType.AutoActive && m_stream != null && m_stream.LocalEndPoint.AddressFamily == Sockets.AddressFamily.InterNetwork) {
+                    if (reply.Type == FtpResponseType.PermanentNegativeCompletion && type == FtpDataConnectionType.AutoActive && m_stream != null && m_stream.LocalEndPoint.AddressFamily == Sockets.AddressFamily.InterNetwork)
+                    {
                         stream.ControlConnection = null; // we don't want this failed EPRT attempt to close our control connection when the stream is closed so clear out the reference.
                         stream.Close();
                         return OpenActiveDataStream(FtpDataConnectionType.PORT, command, restart);
                     }
-                    else {
+                    else
+                    {
                         stream.Close();
                         throw new FtpCommandException(reply);
                     }
                 }
             }
-            else {
+            else
+            {
                 if (m_stream.LocalEndPoint.AddressFamily != Sockets.AddressFamily.InterNetwork)
                     throw new FtpException("Only IPv4 is supported by the PORT command. Use EPRT instead.");
 
                 if (!(reply = Execute("PORT {0},{1},{2}",
                         stream.LocalEndPoint.Address.ToString().Replace('.', ','),
                         stream.LocalEndPoint.Port / 256,
-                        stream.LocalEndPoint.Port % 256)).Success) {
+                        stream.LocalEndPoint.Port % 256)).Success)
+                {
                     stream.Close();
                     throw new FtpCommandException(reply);
                 }
             }
 
-            if (restart > 0) {
+            if (restart > 0)
+            {
                 if (!(reply = Execute("REST {0}", restart)).Success)
                     throw new FtpCommandException(reply);
             }
 
-            if (!(reply = Execute(command)).Success) {
+            if (!(reply = Execute(command)).Success)
+            {
                 stream.Close();
                 throw new FtpCommandException(reply);
             }
@@ -1231,7 +1398,8 @@ namespace System.Net.FtpClient {
             stream.CommandStatus = reply;
 
             ar.AsyncWaitHandle.WaitOne(m_dataConnectionConnectTimeout);
-            if (!ar.IsCompleted) {
+            if (!ar.IsCompleted)
+            {
                 stream.Close();
                 throw new TimeoutException("Timed out waiting for the server to connect to the active data socket.");
             }
@@ -1254,11 +1422,13 @@ namespace System.Net.FtpClient {
         /// <param name='command'>The command to execute that requires a data stream</param>
         /// <param name="restart">Restart location in bytes for file transfer</param>
         /// <returns>The data stream.</returns>
-        FtpDataStream OpenDataStream(string command, long restart) {
+        FtpDataStream OpenDataStream(string command, long restart)
+        {
             FtpDataConnectionType type = m_dataConnectionType;
             FtpDataStream stream = null;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 if (!IsConnected)
@@ -1267,8 +1437,10 @@ namespace System.Net.FtpClient {
                 // The PORT and PASV commands do not work with IPv6 so
                 // if either one of those types are set change them
                 // to EPSV or EPRT appropriately.
-                if (m_stream.LocalEndPoint.AddressFamily == Sockets.AddressFamily.InterNetworkV6) {
-                    switch (type) {
+                if (m_stream.LocalEndPoint.AddressFamily == Sockets.AddressFamily.InterNetworkV6)
+                {
+                    switch (type)
+                    {
                         case FtpDataConnectionType.PORT:
                             type = FtpDataConnectionType.EPRT;
                             FtpTrace.WriteLine("Changed data connection type to EPRT because we are connected with IPv6.");
@@ -1281,7 +1453,8 @@ namespace System.Net.FtpClient {
                     }
                 }
 
-                switch (type) {
+                switch (type)
+                {
                     case FtpDataConnectionType.AutoPassive:
                     case FtpDataConnectionType.EPSV:
                     case FtpDataConnectionType.PASV:
@@ -1298,7 +1471,8 @@ namespace System.Net.FtpClient {
                 if (stream == null)
                     throw new InvalidOperationException("The specified data channel type is not implemented.");
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
@@ -1309,39 +1483,48 @@ namespace System.Net.FtpClient {
         /// Disconnects a data stream
         /// </summary>
         /// <param name="stream">The data stream to close</param>
-        internal FtpReply CloseDataStream(FtpDataStream stream) {
+        internal FtpReply CloseDataStream(FtpDataStream stream)
+        {
             FtpReply reply = new FtpReply();
 
             if (stream == null)
                 throw new ArgumentException("The data stream parameter was null");
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
-                try {
-                    if (IsConnected) {
+                try
+                {
+                    if (IsConnected)
+                    {
                         // if the command that required the data connection was
                         // not successful then there will be no reply from
                         // the server, however if the command was successful
                         // the server will send a reply when the data connection
                         // is closed.
-                        if (stream.CommandStatus.Type == FtpResponseType.PositivePreliminary) {
-                            if (!(reply = GetReply()).Success) {
+                        if (stream.CommandStatus.Type == FtpResponseType.PositivePreliminary)
+                        {
+                            if (!(reply = GetReply()).Success)
+                            {
                                 throw new FtpCommandException(reply);
                             }
                         }
                     }
                 }
-                finally {
+                finally
+                {
                     // if this is a clone of the original control
                     // connection we should Dispose()
-                    if (IsClone) {
+                    if (IsClone)
+                    {
                         Disconnect();
                         Dispose();
                     }
                 }
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
@@ -1354,7 +1537,8 @@ namespace System.Net.FtpClient {
         /// <param name="path">The full or relative path of the file</param>
         /// <returns>A stream for reading the file on the server</returns>
         /// <example><code source="..\Examples\OpenRead.cs" lang="cs" /></example>
-        public Stream OpenRead(string path) {
+        public Stream OpenRead(string path)
+        {
             return OpenRead(path, FtpDataType.Binary, 0);
         }
 
@@ -1365,7 +1549,8 @@ namespace System.Net.FtpClient {
         /// <param name="type">ASCII/Binary</param>
         /// <returns>A stream for reading the file on the server</returns>
         /// <example><code source="..\Examples\OpenRead.cs" lang="cs" /></example>
-        public Stream OpenRead(string path, FtpDataType type) {
+        public Stream OpenRead(string path, FtpDataType type)
+        {
             return OpenRead(path, type, 0);
         }
 
@@ -1376,7 +1561,8 @@ namespace System.Net.FtpClient {
         /// <param name="restart">Resume location</param>
         /// <returns>A stream for reading the file on the server</returns>
         /// <example><code source="..\Examples\OpenRead.cs" lang="cs" /></example>
-        public Stream OpenRead(string path, long restart) {
+        public Stream OpenRead(string path, long restart)
+        {
             return OpenRead(path, FtpDataType.Binary, restart);
         }
 
@@ -1388,20 +1574,24 @@ namespace System.Net.FtpClient {
         /// <param name="restart">Resume location</param>
         /// <returns>A stream for reading the file on the server</returns>
         /// <example><code source="..\Examples\OpenRead.cs" lang="cs" /></example>
-        public virtual Stream OpenRead(string path, FtpDataType type, long restart) {
+        public virtual Stream OpenRead(string path, FtpDataType type, long restart)
+        {
             FtpClient client = null;
             FtpDataStream stream = null;
             long length = 0;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
-                if (m_threadSafeDataChannels) {
+                if (m_threadSafeDataChannels)
+                {
                     client = CloneConnection();
                     client.Connect();
                     client.SetWorkingDirectory(GetWorkingDirectory());
                 }
-                else {
+                else
+                {
                     client = this;
                 }
 
@@ -1409,11 +1599,13 @@ namespace System.Net.FtpClient {
                 length = client.GetFileSize(path);
                 stream = client.OpenDataStream(string.Format("RETR {0}", path.GetFtpPath()), restart);
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
-            if (stream != null) {
+            if (stream != null)
+            {
                 if (length > 0)
                     stream.SetLength(length);
 
@@ -1432,7 +1624,8 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginOpenRead.cs" lang="cs" /></example>
-        public IAsyncResult BeginOpenRead(string path, AsyncCallback callback, object state) {
+        public IAsyncResult BeginOpenRead(string path, AsyncCallback callback, object state)
+        {
             return BeginOpenRead(path, FtpDataType.Binary, 0, callback, state);
         }
 
@@ -1445,7 +1638,8 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginOpenRead.cs" lang="cs" /></example>
-        public IAsyncResult BeginOpenRead(string path, FtpDataType type, AsyncCallback callback, object state) {
+        public IAsyncResult BeginOpenRead(string path, FtpDataType type, AsyncCallback callback, object state)
+        {
             return BeginOpenRead(path, type, 0, callback, state);
         }
 
@@ -1458,7 +1652,8 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginOpenRead.cs" lang="cs" /></example>
-        public IAsyncResult BeginOpenRead(string path, long restart, AsyncCallback callback, object state) {
+        public IAsyncResult BeginOpenRead(string path, long restart, AsyncCallback callback, object state)
+        {
             return BeginOpenRead(path, FtpDataType.Binary, restart, callback, state);
         }
 
@@ -1474,12 +1669,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginOpenRead.cs" lang="cs" /></example>
-        public IAsyncResult BeginOpenRead(string path, FtpDataType type, long restart, AsyncCallback callback, object state) {
+        public IAsyncResult BeginOpenRead(string path, FtpDataType type, long restart, AsyncCallback callback, object state)
+        {
             AsyncOpenRead func;
             IAsyncResult ar;
 
             ar = (func = new AsyncOpenRead(OpenRead)).BeginInvoke(path, type, restart, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -1492,7 +1689,8 @@ namespace System.Net.FtpClient {
         /// <param name="ar">IAsyncResult returned from BeginOpenRead()</param>
         /// <returns>A readable stream</returns>
         /// <example><code source="..\Examples\BeginOpenRead.cs" lang="cs" /></example>
-        public Stream EndOpenRead(IAsyncResult ar) {
+        public Stream EndOpenRead(IAsyncResult ar)
+        {
             return GetAsyncDelegate<AsyncOpenRead>(ar).EndInvoke(ar);
         }
 
@@ -1502,7 +1700,8 @@ namespace System.Net.FtpClient {
         /// <param name="path">Full or relative path of the file</param>
         /// <returns>A stream for writing to the file on the server</returns>
         /// <example><code source="..\Examples\OpenWrite.cs" lang="cs" /></example>
-        public Stream OpenWrite(string path) {
+        public Stream OpenWrite(string path)
+        {
             return OpenWrite(path, FtpDataType.Binary);
         }
 
@@ -1513,20 +1712,24 @@ namespace System.Net.FtpClient {
         /// <param name="type">ASCII/Binary</param>
         /// <returns>A stream for writing to the file on the server</returns>
         /// <example><code source="..\Examples\OpenWrite.cs" lang="cs" /></example>
-        public virtual Stream OpenWrite(string path, FtpDataType type) {
+        public virtual Stream OpenWrite(string path, FtpDataType type)
+        {
             FtpClient client = null;
             FtpDataStream stream = null;
             long length = 0;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
-                if (m_threadSafeDataChannels) {
+                if (m_threadSafeDataChannels)
+                {
                     client = CloneConnection();
                     client.Connect();
                     client.SetWorkingDirectory(GetWorkingDirectory());
                 }
-                else {
+                else
+                {
                     client = this;
                 }
 
@@ -1537,7 +1740,8 @@ namespace System.Net.FtpClient {
                 if (length > 0 && stream != null)
                     stream.SetLength(length);
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
@@ -1552,7 +1756,8 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginOpenWrite.cs" lang="cs" /></example>
-        public IAsyncResult BeginOpenWrite(string path, AsyncCallback callback, object state) {
+        public IAsyncResult BeginOpenWrite(string path, AsyncCallback callback, object state)
+        {
             return BeginOpenWrite(path, FtpDataType.Binary, callback, state);
         }
 
@@ -1567,12 +1772,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginOpenWrite.cs" lang="cs" /></example>
-        public IAsyncResult BeginOpenWrite(string path, FtpDataType type, AsyncCallback callback, object state) {
+        public IAsyncResult BeginOpenWrite(string path, FtpDataType type, AsyncCallback callback, object state)
+        {
             AsyncOpenWrite func;
             IAsyncResult ar;
 
             ar = (func = new AsyncOpenWrite(OpenWrite)).BeginInvoke(path, type, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -1585,7 +1792,8 @@ namespace System.Net.FtpClient {
         /// <param name="ar">IAsyncResult returned from BeginOpenWrite()</param>
         /// <returns>A writable stream</returns>
         /// <example><code source="..\Examples\BeginOpenWrite.cs" lang="cs" /></example>
-        public Stream EndOpenWrite(IAsyncResult ar) {
+        public Stream EndOpenWrite(IAsyncResult ar)
+        {
             return GetAsyncDelegate<AsyncOpenWrite>(ar).EndInvoke(ar);
         }
 
@@ -1595,7 +1803,8 @@ namespace System.Net.FtpClient {
         /// <param name="path">The full or relative path to the file to be opened</param>
         /// <returns>A stream for writing to the file on the server</returns>
         /// <example><code source="..\Examples\OpenAppend.cs" lang="cs" /></example>
-        public Stream OpenAppend(string path) {
+        public Stream OpenAppend(string path)
+        {
             return OpenAppend(path, FtpDataType.Binary);
         }
 
@@ -1606,20 +1815,24 @@ namespace System.Net.FtpClient {
         /// <param name="type">ASCII/Binary</param>
         /// <returns>A stream for writing to the file on the server</returns>
         /// <example><code source="..\Examples\OpenAppend.cs" lang="cs" /></example>
-        public virtual Stream OpenAppend(string path, FtpDataType type) {
+        public virtual Stream OpenAppend(string path, FtpDataType type)
+        {
             FtpClient client = null;
             FtpDataStream stream = null;
             long length = 0;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
-                if (m_threadSafeDataChannels) {
+                if (m_threadSafeDataChannels)
+                {
                     client = CloneConnection();
                     client.Connect();
                     client.SetWorkingDirectory(GetWorkingDirectory());
                 }
-                else {
+                else
+                {
                     client = this;
                 }
 
@@ -1627,12 +1840,14 @@ namespace System.Net.FtpClient {
                 length = client.GetFileSize(path);
                 stream = client.OpenDataStream(string.Format("APPE {0}", path.GetFtpPath()), 0);
 
-                if (length > 0 && stream != null) {
+                if (length > 0 && stream != null)
+                {
                     stream.SetLength(length);
                     stream.SetPosition(length);
                 }
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
@@ -1647,7 +1862,8 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginOpenAppend.cs" lang="cs" /></example>
-        public IAsyncResult BeginOpenAppend(string path, AsyncCallback callback, object state) {
+        public IAsyncResult BeginOpenAppend(string path, AsyncCallback callback, object state)
+        {
             return BeginOpenAppend(path, FtpDataType.Binary, callback, state);
         }
 
@@ -1662,12 +1878,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginOpenAppend.cs" lang="cs" /></example>
-        public IAsyncResult BeginOpenAppend(string path, FtpDataType type, AsyncCallback callback, object state) {
+        public IAsyncResult BeginOpenAppend(string path, FtpDataType type, AsyncCallback callback, object state)
+        {
             IAsyncResult ar;
             AsyncOpenAppend func;
 
             ar = (func = new AsyncOpenAppend(OpenAppend)).BeginInvoke(path, type, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -1680,7 +1898,8 @@ namespace System.Net.FtpClient {
         /// <param name="ar">IAsyncResult returned from BeginOpenWrite()</param>
         /// <returns>A writable stream</returns>
         /// <example><code source="..\Examples\BeginOpenAppend.cs" lang="cs" /></example>
-        public Stream EndOpenAppend(IAsyncResult ar) {
+        public Stream EndOpenAppend(IAsyncResult ar)
+        {
             return GetAsyncDelegate<AsyncOpenAppend>(ar).EndInvoke(ar);
         }
 
@@ -1692,7 +1911,8 @@ namespace System.Net.FtpClient {
         /// <param name="item">The symbolic link</param>
         /// <returns>FtpListItem, null if the link can't be dereferenced</returns>
         /// <example><code source="..\Examples\DereferenceLink.cs" lang="cs" /></example>
-        public FtpListItem DereferenceLink(FtpListItem item) {
+        public FtpListItem DereferenceLink(FtpListItem item)
+        {
             return DereferenceLink(item, MaximumDereferenceCount);
         }
 
@@ -1703,7 +1923,8 @@ namespace System.Net.FtpClient {
         /// <param name="recMax">The maximum depth of recursion that can be performed before giving up.</param>
         /// <returns>FtpListItem, null if the link can't be dereferenced</returns>
         /// <example><code source="..\Examples\DereferenceLink.cs" lang="cs" /></example>
-        public FtpListItem DereferenceLink(FtpListItem item, int recMax) {
+        public FtpListItem DereferenceLink(FtpListItem item, int recMax)
+        {
             int count = 0;
             return DereferenceLink(item, recMax, ref count);
         }
@@ -1716,23 +1937,28 @@ namespace System.Net.FtpClient {
         /// <param name="count">Counter</param>
         /// <returns>FtpListItem, null if the link can't be dereferenced</returns>
         /// <example><code source="..\Examples\DereferenceLink.cs" lang="cs" /></example>
-        FtpListItem DereferenceLink(FtpListItem item, int recMax, ref int count) {
+        FtpListItem DereferenceLink(FtpListItem item, int recMax, ref int count)
+        {
             if (item.Type != FtpFileSystemObjectType.Link)
                 throw new FtpException("You can only derefernce a symbolic link. Please verify the item type is Link.");
 
             if (item.LinkTarget == null)
                 throw new FtpException("The link target was null. Please check this before trying to dereference the link.");
 
-            foreach (FtpListItem obj in GetListing(item.LinkTarget.GetFtpDirectoryName(), FtpListOption.ForceList)) {
-                if (item.LinkTarget == obj.FullName) {
-                    if (obj.Type == FtpFileSystemObjectType.Link) {
+            foreach (FtpListItem obj in GetListing(item.LinkTarget.GetFtpDirectoryName(), FtpListOption.ForceList))
+            {
+                if (item.LinkTarget == obj.FullName)
+                {
+                    if (obj.Type == FtpFileSystemObjectType.Link)
+                    {
                         if (++count == recMax)
                             return null;
 
                         return DereferenceLink(obj, recMax, ref count);
                     }
 
-                    if (HasFeature(FtpCapability.MDTM)) {
+                    if (HasFeature(FtpCapability.MDTM))
+                    {
                         DateTime modify = GetModifiedTime(obj.FullName);
 
                         if (modify != DateTime.MinValue)
@@ -1760,12 +1986,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State Object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginDereferenceLink.cs" lang="cs" /></example>
-        public IAsyncResult BeginDereferenceLink(FtpListItem item, int recMax, AsyncCallback callback, object state) {
+        public IAsyncResult BeginDereferenceLink(FtpListItem item, int recMax, AsyncCallback callback, object state)
+        {
             IAsyncResult ar;
             AsyncDereferenceLink func;
 
             ar = (func = new AsyncDereferenceLink(DereferenceLink)).BeginInvoke(item, recMax, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -1782,7 +2010,8 @@ namespace System.Net.FtpClient {
         /// <param name="state">State Object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginDereferenceLink.cs" lang="cs" /></example>
-        public IAsyncResult BeginDereferenceLink(FtpListItem item, AsyncCallback callback, object state) {
+        public IAsyncResult BeginDereferenceLink(FtpListItem item, AsyncCallback callback, object state)
+        {
             return BeginDereferenceLink(item, MaximumDereferenceCount, callback, state);
         }
 
@@ -1792,7 +2021,8 @@ namespace System.Net.FtpClient {
         /// <param name="ar">IAsyncResult</param>
         /// <returns>FtpListItem, null if the link can't be dereferenced</returns>
         /// <example><code source="..\Examples\BeginDereferenceLink.cs" lang="cs" /></example>
-        public FtpListItem EndDereferenceLink(IAsyncResult ar) {
+        public FtpListItem EndDereferenceLink(IAsyncResult ar)
+        {
             return GetAsyncDelegate<AsyncDereferenceLink>(ar).EndInvoke(ar);
         }
 
@@ -1807,28 +2037,34 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="path">The path of the object to retrieve information about</param>
         /// <returns>A FtpListItem object</returns>
-        public FtpListItem GetObjectInfo(string path) {
+        public FtpListItem GetObjectInfo(string path)
+        {
             FtpReply reply;
             string[] res;
 
-            if ((Capabilities & FtpCapability.MLSD) != FtpCapability.MLSD) {
+            if ((Capabilities & FtpCapability.MLSD) != FtpCapability.MLSD)
+            {
                 throw new InvalidOperationException("The GetObjectInfo method only works on servers that support machine listings. " +
                     "Please check the Capabilities flags for FtpCapability.MLSD before calling this method.");
             }
 
-            if ((reply = Execute("MLST {0}", path)).Success) {
+            if ((reply = Execute("MLST {0}", path)).Success)
+            {
                 res = reply.InfoMessages.Split('\n');
-                if (res.Length > 1) {
+                if (res.Length > 1)
+                {
                     string info = "";
 
-                    for (int i = 1; i < res.Length; i++) {
+                    for (int i = 1; i < res.Length; i++)
+                    {
                         info += res[i];
                     }
 
                     return FtpListItem.Parse(null, info, Capabilities);
                 }
             }
-            else {
+            else
+            {
                 FtpTrace.WriteLine("Failed to get object info for path {0} with error {1}", path, reply.ErrorMessage);
             }
 
@@ -1850,12 +2086,14 @@ namespace System.Net.FtpClient {
         /// <param name="callback">Async Callback</param>
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
-        public IAsyncResult BeginGetObjectInfo(string path, AsyncCallback callback, object state) {
+        public IAsyncResult BeginGetObjectInfo(string path, AsyncCallback callback, object state)
+        {
             IAsyncResult ar;
             AsyncGetObjectInfo func;
 
             ar = (func = new AsyncGetObjectInfo(GetObjectInfo)).BeginInvoke(path, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -1867,7 +2105,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="ar">IAsyncResult returned from BeginGetObjectInfo</param>
         /// <returns>FtpListItem if the command succeeded, null if there was a problem.</returns>
-        public FtpListItem EndGetObjectInfo(IAsyncResult ar) {
+        public FtpListItem EndGetObjectInfo(IAsyncResult ar)
+        {
             return GetAsyncDelegate<AsyncGetObjectInfo>(ar).EndInvoke(ar);
         }
 
@@ -1881,7 +2120,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <returns>An array of FtpListItem objects</returns>
         /// <example><code source="..\Examples\GetListing.cs" lang="cs" /></example>
-        public FtpListItem[] GetListing() {
+        public FtpListItem[] GetListing()
+        {
             return GetListing(null);
         }
 
@@ -1896,8 +2136,14 @@ namespace System.Net.FtpClient {
         /// <param name="path">The path of the directory to list</param>
         /// <returns>An array of FtpListItem objects</returns>
         /// <example><code source="..\Examples\GetListing.cs" lang="cs" /></example>
-        public FtpListItem[] GetListing(string path) {
+        public FtpListItem[] GetListing(string path)
+        {
             return GetListing(path, 0);
+        }
+
+        public FtpListItem[] GetListing(string path, FtpListOption options)
+        {
+            return this.GetListing(path, options, FtpDataType.ASCII);
         }
 
         /// <summary>
@@ -1912,13 +2158,15 @@ namespace System.Net.FtpClient {
         /// <param name="options">Options that dictacte how a list is performed and what information is gathered.</param>
         /// <returns>An array of FtpListItem objects</returns>
         /// <example><code source="..\Examples\GetListing.cs" lang="cs" /></example>
-        public FtpListItem[] GetListing(string path, FtpListOption options) {
+        public FtpListItem[] GetListing(string path, FtpListOption options, FtpDataType dataType)
+        {
             FtpListItem item = null;
             List<FtpListItem> lst = new List<FtpListItem>();
             List<string> rawlisting = new List<string>();
             string listcmd = null;
             string pwd = GetWorkingDirectory();
             string buf = null;
+            string originalPath = path;
 
             // old path cleanup code
             /*path = path.GetFtpPath();
@@ -1932,13 +2180,15 @@ namespace System.Net.FtpClient {
             }*/
 
             path = path.GetFtpPath();
-            if (path == null || path.Trim().Length == 0) {
+            if (path == null || path.Trim().Length == 0)
+            {
                 if (pwd != null && pwd.Trim().Length > 0)
                     path = pwd;
                 else
                     path = "./";
             }
-            else if (!path.StartsWith("/") && pwd != null && pwd.Trim().Length > 0) {
+            else if (!path.StartsWith("/") && pwd != null && pwd.Trim().Length > 0)
+            {
                 if (path.StartsWith("./"))
                     path = path.Remove(0, 2);
                 path = string.Format("{0}/{1}", pwd, path).GetFtpPath();
@@ -1949,17 +2199,22 @@ namespace System.Net.FtpClient {
             // formats which translates to more effcient file listings
             // so always prefer MLSD over LIST unless the caller of this
             // method overrides it with the ForceList option
-            if ((options & FtpListOption.ForceList) != FtpListOption.ForceList && HasFeature(FtpCapability.MLSD)) {
+            if ((options & FtpListOption.ForceList) != FtpListOption.ForceList && HasFeature(FtpCapability.MLSD))
+            {
                 listcmd = "MLSD";
             }
-            else {
-                if ((options & FtpListOption.UseLS) == FtpListOption.UseLS) {
+            else
+            {
+                if ((options & FtpListOption.UseLS) == FtpListOption.UseLS)
+                {
                     listcmd = "LS";
                 }
-                else if ((options & FtpListOption.NameList) == FtpListOption.NameList) {
+                else if ((options & FtpListOption.NameList) == FtpListOption.NameList)
+                {
                     listcmd = "NLST";
                 }
-                else {
+                else
+                {
                     string listopts = "";
 
                     listcmd = "LIST";
@@ -1975,37 +2230,64 @@ namespace System.Net.FtpClient {
                 }
             }
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
-                Execute("TYPE I");
+                Execute(dataType == FtpDataType.ASCII ? "TYPE I" : "TYPE A");
 
                 // read in raw file listing
-                using (FtpDataStream stream = OpenDataStream(string.Format("{0} {1}", listcmd, path.GetFtpPath()), 0)) {
-                    try {
-                        while ((buf = stream.ReadLine(Encoding)) != null) {
-                            if (buf.Length > 0) {
+                using (FtpDataStream stream = OpenDataStream(string.Format("{0} {1}", listcmd, path.GetFtpPath()), 0))
+                {
+                    try
+                    {
+                        while ((buf = stream.ReadLine(Encoding)) != null)
+                        {
+                            if (buf.Length > 0)
+                            {
                                 rawlisting.Add(buf);
                                 FtpTrace.WriteLine(buf);
                             }
                         }
                     }
-                    finally {
+                    finally
+                    {
                         stream.Close();
                     }
                 }
             }
-            finally {
+            catch (FtpCommandException ex)
+            {
+                // Specific catches for Enterprise Gateway Ftp Server
+                // Tested against version 2.1.00
+                if (ex.Message.Contains("LIST command invalid with TYPE binary"))
+                {
+                    return this.GetListing(originalPath, options, FtpDataType.Binary);
+                }
+                else if (ex.Message.Contains("LIST failed. No batches found."))
+                {
+                    return new FtpListItem[0];
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
-            for (int i = 0; i < rawlisting.Count; i++) {
+            for (int i = 0; i < rawlisting.Count; i++)
+            {
                 buf = rawlisting[i];
 
-                if ((options & FtpListOption.NameList) == FtpListOption.NameList) {
+                if ((options & FtpListOption.NameList) == FtpListOption.NameList)
+                {
                     // if NLST was used we only have a file name so
                     // there is nothing to parse.
-                    item = new FtpListItem() {
+                    item = new FtpListItem()
+                    {
                         FullName = buf
                     };
 
@@ -2016,11 +2298,14 @@ namespace System.Net.FtpClient {
 
                     lst.Add(item);
                 }
-                else {
+                else
+                {
                     // if this is a result of LIST -R then the path will be spit out
                     // before each block of objects
-                    if (listcmd.StartsWith("LIST") && (options & FtpListOption.Recursive) == FtpListOption.Recursive) {
-                        if (buf.StartsWith("/") && buf.EndsWith(":")) {
+                    if (listcmd.StartsWith("LIST") && (options & FtpListOption.Recursive) == FtpListOption.Recursive)
+                    {
+                        if (buf.StartsWith("/") && buf.EndsWith(":"))
+                        {
                             path = buf.TrimEnd(':');
                             continue;
                         }
@@ -2041,19 +2326,23 @@ namespace System.Net.FtpClient {
                 }
 
                 // load extended information that wasn't available if the list options flags say to do so.
-                if (item != null) {
+                if (item != null)
+                {
                     // try to dereference symbolic links if the appropriate list
                     // option was passed
-                    if (item.Type == FtpFileSystemObjectType.Link && (options & FtpListOption.DerefLinks) == FtpListOption.DerefLinks) {
+                    if (item.Type == FtpFileSystemObjectType.Link && (options & FtpListOption.DerefLinks) == FtpListOption.DerefLinks)
+                    {
                         item.LinkObject = DereferenceLink(item);
                     }
 
-                    if ((options & FtpListOption.Modify) == FtpListOption.Modify && HasFeature(FtpCapability.MDTM)) {
+                    if ((options & FtpListOption.Modify) == FtpListOption.Modify && HasFeature(FtpCapability.MDTM))
+                    {
                         // if the modified date was not loaded or the modified date is more than a day in the future 
                         // and the server supports the MDTM command, load the modified date.
                         // most servers do not support retrieving the modified date
                         // of a directory but we try any way.
-                        if (item.Modified == DateTime.MinValue || listcmd.StartsWith("LIST")) {
+                        if (item.Modified == DateTime.MinValue || listcmd.StartsWith("LIST"))
+                        {
                             DateTime modify;
 
                             if (item.Type == FtpFileSystemObjectType.Directory)
@@ -2064,14 +2353,18 @@ namespace System.Net.FtpClient {
                         }
                     }
 
-                    if ((options & FtpListOption.Size) == FtpListOption.Size && HasFeature(FtpCapability.SIZE)) {
+                    if ((options & FtpListOption.Size) == FtpListOption.Size && HasFeature(FtpCapability.SIZE))
+                    {
                         // if no size was parsed, the object is a file and the server
                         // supports the SIZE command, then load the file size
-                        if (item.Size == -1) {
-                            if (item.Type != FtpFileSystemObjectType.Directory) {
+                        if (item.Size == -1)
+                        {
+                            if (item.Type != FtpFileSystemObjectType.Directory)
+                            {
                                 item.Size = GetFileSize(item.FullName);
                             }
-                            else {
+                            else
+                            {
                                 item.Size = 0;
                             }
                         }
@@ -2089,7 +2382,8 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginGetListing.cs" lang="cs" /></example>
-        public IAsyncResult BeginGetListing(AsyncCallback callback, Object state) {
+        public IAsyncResult BeginGetListing(AsyncCallback callback, Object state)
+        {
             return BeginGetListing(null, callback, state);
         }
 
@@ -2101,7 +2395,8 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginGetListing.cs" lang="cs" /></example>
-        public IAsyncResult BeginGetListing(string path, AsyncCallback callback, Object state) {
+        public IAsyncResult BeginGetListing(string path, AsyncCallback callback, Object state)
+        {
             return BeginGetListing(path, FtpListOption.Modify | FtpListOption.Size, callback, state);
         }
 
@@ -2117,12 +2412,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginGetListing.cs" lang="cs" /></example>
-        public IAsyncResult BeginGetListing(string path, FtpListOption options, AsyncCallback callback, Object state) {
+        public IAsyncResult BeginGetListing(string path, FtpListOption options, AsyncCallback callback, Object state)
+        {
             IAsyncResult ar;
             AsyncGetListing func;
 
             ar = (func = new AsyncGetListing(GetListing)).BeginInvoke(path, options, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -2135,7 +2432,8 @@ namespace System.Net.FtpClient {
         /// <param name="ar">IAsyncResult return from BeginGetListing()</param>
         /// <returns>An array of items retrieved in the listing</returns>
         /// <example><code source="..\Examples\BeginGetListing.cs" lang="cs" /></example>
-        public FtpListItem[] EndGetListing(IAsyncResult ar) {
+        public FtpListItem[] EndGetListing(IAsyncResult ar)
+        {
             return GetAsyncDelegate<AsyncGetListing>(ar).EndInvoke(ar);
         }
 
@@ -2143,7 +2441,8 @@ namespace System.Net.FtpClient {
         /// Returns a file/directory listing using the NLST command.
         /// </summary>
         /// <returns>A string array of file and directory names if any were returned.</returns>
-        public string[] GetNameListing() {
+        public string[] GetNameListing()
+        {
             return GetNameListing(null);
         }
 
@@ -2153,7 +2452,8 @@ namespace System.Net.FtpClient {
         /// <param name="path">The path of the directory to list</param>
         /// <returns>A string array of file and directory names if any were returned.</returns>
         /// <example><code source="..\Examples\GetNameListing.cs" lang="cs" /></example>
-        public string[] GetNameListing(string path) {
+        public string[] GetNameListing(string path)
+        {
             List<string> lst = new List<string>();
             string pwd = GetWorkingDirectory();
 
@@ -2167,19 +2467,22 @@ namespace System.Net.FtpClient {
             }*/
 
             path = path.GetFtpPath();
-            if (path == null || path.Trim().Length == 0) {
+            if (path == null || path.Trim().Length == 0)
+            {
                 if (pwd != null && pwd.Trim().Length > 0)
                     path = pwd;
                 else
                     path = "./";
             }
-            else if (!path.StartsWith("/") && pwd != null && pwd.Trim().Length > 0) {
+            else if (!path.StartsWith("/") && pwd != null && pwd.Trim().Length > 0)
+            {
                 if (path.StartsWith("./"))
                     path = path.Remove(0, 2);
                 path = string.Format("{0}/{1}", pwd, path).GetFtpPath();
             }
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 // always get the file listing in binary
@@ -2187,19 +2490,23 @@ namespace System.Net.FtpClient {
                 // problems that would happen if in ASCII.
                 Execute("TYPE I");
 
-                using (FtpDataStream stream = OpenDataStream(string.Format("NLST {0}", path.GetFtpPath()), 0)) {
+                using (FtpDataStream stream = OpenDataStream(string.Format("NLST {0}", path.GetFtpPath()), 0))
+                {
                     string buf;
 
-                    try {
+                    try
+                    {
                         while ((buf = stream.ReadLine(Encoding)) != null)
                             lst.Add(buf);
                     }
-                    finally {
+                    finally
+                    {
                         stream.Close();
                     }
                 }
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
@@ -2216,12 +2523,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginGetNameListing.cs" lang="cs" /></example>
-        public IAsyncResult BeginGetNameListing(string path, AsyncCallback callback, object state) {
+        public IAsyncResult BeginGetNameListing(string path, AsyncCallback callback, object state)
+        {
             IAsyncResult ar;
             AsyncGetNameListing func;
 
             ar = (func = new AsyncGetNameListing(GetNameListing)).BeginInvoke(path, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -2235,7 +2544,8 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginGetNameListing.cs" lang="cs" /></example>
-        public IAsyncResult BeginGetNameListing(AsyncCallback callback, object state) {
+        public IAsyncResult BeginGetNameListing(AsyncCallback callback, object state)
+        {
             return BeginGetNameListing(null, callback, state);
         }
 
@@ -2245,7 +2555,8 @@ namespace System.Net.FtpClient {
         /// <param name="ar">IAsyncResult object returned from BeginGetNameListing</param>
         /// <returns>An array of file and directory names if any were returned.</returns>
         /// <example><code source="..\Examples\BeginGetNameListing.cs" lang="cs" /></example>
-        public string[] EndGetNameListing(IAsyncResult ar) {
+        public string[] EndGetNameListing(IAsyncResult ar)
+        {
             return GetAsyncDelegate<AsyncGetNameListing>(ar).EndInvoke(ar);
         }
 
@@ -2253,13 +2564,16 @@ namespace System.Net.FtpClient {
         /// Sets the data type of information sent over the data stream
         /// </summary>
         /// <param name="type">ASCII/Binary</param>
-        protected void SetDataType(FtpDataType type) {
+        protected void SetDataType(FtpDataType type)
+        {
             FtpReply reply;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
-                switch (type) {
+                switch (type)
+                {
                     case FtpDataType.ASCII:
                         if (!(reply = Execute("TYPE A")).Success)
                             throw new FtpCommandException(reply);
@@ -2276,7 +2590,8 @@ namespace System.Net.FtpClient {
                         throw new FtpException("Unsupported data type: " + type.ToString());
                 }
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
         }
@@ -2290,12 +2605,14 @@ namespace System.Net.FtpClient {
         /// <param name="callback">Async callback</param>
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
-        protected IAsyncResult BeginSetDataType(FtpDataType type, AsyncCallback callback, object state) {
+        protected IAsyncResult BeginSetDataType(FtpDataType type, AsyncCallback callback, object state)
+        {
             IAsyncResult ar;
             AsyncSetDataType func;
 
             ar = (func = new AsyncSetDataType(SetDataType)).BeginInvoke(type, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -2306,7 +2623,8 @@ namespace System.Net.FtpClient {
         /// Ends a call to BeginSetDataType()
         /// </summary>
         /// <param name="ar">IAsyncResult returned from BeginSetDataType()</param>
-        protected void EndSetDataType(IAsyncResult ar) {
+        protected void EndSetDataType(IAsyncResult ar)
+        {
             GetAsyncDelegate<AsyncSetDataType>(ar).EndInvoke(ar);
         }
 
@@ -2315,20 +2633,23 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="path">The path of the directory to change to</param>
         /// <example><code source="..\Examples\SetWorkingDirectory.cs" lang="cs" /></example>
-        public void SetWorkingDirectory(string path) {
+        public void SetWorkingDirectory(string path)
+        {
             FtpReply reply;
             string ftppath = path.GetFtpPath();
 
             if (ftppath == "." || ftppath == "./")
                 return;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 if (!(reply = Execute("CWD {0}", ftppath)).Success)
                     throw new FtpCommandException(reply);
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
         }
@@ -2343,12 +2664,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginSetWorkingDirectory.cs" lang="cs" /></example>
-        public IAsyncResult BeginSetWorkingDirectory(string path, AsyncCallback callback, object state) {
+        public IAsyncResult BeginSetWorkingDirectory(string path, AsyncCallback callback, object state)
+        {
             IAsyncResult ar;
             AsyncSetWorkingDirectory func;
 
             ar = (func = new AsyncSetWorkingDirectory(SetWorkingDirectory)).BeginInvoke(path, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -2360,7 +2683,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="ar">IAsyncResult returned from BeginSetWorkingDirectory</param>
         /// <example><code source="..\Examples\BeginSetWorkingDirectory.cs" lang="cs" /></example>
-        public void EndSetWorkingDirectory(IAsyncResult ar) {
+        public void EndSetWorkingDirectory(IAsyncResult ar)
+        {
             GetAsyncDelegate<AsyncSetWorkingDirectory>(ar).EndInvoke(ar);
         }
 
@@ -2369,26 +2693,31 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <returns>The current working directory, ./ if the response couldn't be parsed.</returns>
         /// <example><code source="..\Examples\GetWorkingDirectory.cs" lang="cs" /></example>
-        public string GetWorkingDirectory() {
+        public string GetWorkingDirectory()
+        {
             FtpReply reply;
             Match m;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 if (!(reply = Execute("PWD")).Success)
                     throw new FtpCommandException(reply);
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
-            if ((m = Regex.Match(reply.Message, "\"(?<pwd>.*)\"")).Success) {
+            if ((m = Regex.Match(reply.Message, "\"(?<pwd>.*)\"")).Success)
+            {
                 return m.Groups["pwd"].Value;
             }
 
             // check for MODCOMP ftp path mentioned in forums: https://netftp.codeplex.com/discussions/444461
-            if ((m = Regex.Match(reply.Message, "PWD = (?<pwd>.*)")).Success) {
+            if ((m = Regex.Match(reply.Message, "PWD = (?<pwd>.*)")).Success)
+            {
                 return m.Groups["pwd"].Value;
             }
 
@@ -2406,12 +2735,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginGetWorkingDirectory.cs" lang="cs" /></example>
-        public IAsyncResult BeginGetWorkingDirectory(AsyncCallback callback, object state) {
+        public IAsyncResult BeginGetWorkingDirectory(AsyncCallback callback, object state)
+        {
             IAsyncResult ar;
             AsyncGetWorkingDirectory func;
 
             ar = (func = new AsyncGetWorkingDirectory(GetWorkingDirectory)).BeginInvoke(callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -2424,7 +2755,8 @@ namespace System.Net.FtpClient {
         /// <param name="ar">IAsyncResult returned from BeginGetWorkingDirectory</param>
         /// <returns>The current working directory</returns>
         /// <example><code source="..\Examples\BeginGetWorkingDirectory.cs" lang="cs" /></example>
-        public string EndGetWorkingDirectory(IAsyncResult ar) {
+        public string EndGetWorkingDirectory(IAsyncResult ar)
+        {
             return GetAsyncDelegate<AsyncGetWorkingDirectory>(ar).EndInvoke(ar);
         }
 
@@ -2434,11 +2766,13 @@ namespace System.Net.FtpClient {
         /// <param name="path">The full or relative path of the file</param>
         /// <returns>-1 if the command fails, otherwise the file size</returns>
         /// <example><code source="..\Examples\GetFileSize.cs" lang="cs" /></example>
-        public virtual long GetFileSize(string path) {
+        public virtual long GetFileSize(string path)
+        {
             FtpReply reply;
             long length = 0;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 if (!(reply = Execute("SIZE {0}", path.GetFtpPath())).Success)
@@ -2447,7 +2781,8 @@ namespace System.Net.FtpClient {
                 if (!long.TryParse(reply.Message, out length))
                     return -1;
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
@@ -2464,12 +2799,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginGetFileSize.cs" lang="cs" /></example>
-        public IAsyncResult BeginGetFileSize(string path, AsyncCallback callback, object state) {
+        public IAsyncResult BeginGetFileSize(string path, AsyncCallback callback, object state)
+        {
             IAsyncResult ar;
             AsyncGetFileSize func;
 
             ar = (func = new AsyncGetFileSize(GetFileSize)).BeginInvoke(path, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -2482,7 +2819,8 @@ namespace System.Net.FtpClient {
         /// <param name="ar">IAsyncResult returned from BeginGetFileSize</param>
         /// <returns>The size of the file, -1 if there was a problem.</returns>
         /// <example><code source="..\Examples\BeginGetFileSize.cs" lang="cs" /></example>
-        public long EndGetFileSize(IAsyncResult ar) {
+        public long EndGetFileSize(IAsyncResult ar)
+        {
             return GetAsyncDelegate<AsyncGetFileSize>(ar).EndInvoke(ar);
         }
 
@@ -2492,17 +2830,20 @@ namespace System.Net.FtpClient {
         /// <param name="path">The full path to the file</param>
         /// <returns>The modified time, DateTime.MinValue if there was a problem</returns>
         /// <example><code source="..\Examples\GetModifiedTime.cs" lang="cs" /></example>
-        public virtual DateTime GetModifiedTime(string path) {
+        public virtual DateTime GetModifiedTime(string path)
+        {
             DateTime modify = DateTime.MinValue;
             FtpReply reply;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 if ((reply = Execute("MDTM {0}", path.GetFtpPath())).Success)
                     modify = reply.Message.GetFtpDate(DateTimeStyles.AssumeUniversal);
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
@@ -2519,12 +2860,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginGetModifiedTime.cs" lang="cs" /></example>
-        public IAsyncResult BeginGetModifiedTime(string path, AsyncCallback callback, object state) {
+        public IAsyncResult BeginGetModifiedTime(string path, AsyncCallback callback, object state)
+        {
             IAsyncResult ar;
             AsyncGetModifiedTime func;
 
             ar = (func = new AsyncGetModifiedTime(GetModifiedTime)).BeginInvoke(path, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -2537,7 +2880,8 @@ namespace System.Net.FtpClient {
         /// <param name="ar">IAsyncResult returned from BeginGetModifiedTime()</param>
         /// <returns>The modified time, DateTime.MinValue if there was a problem</returns>
         /// <example><code source="..\Examples\BeginGetModifiedTime.cs" lang="cs" /></example>
-        public DateTime EndGetModifiedTime(IAsyncResult ar) {
+        public DateTime EndGetModifiedTime(IAsyncResult ar)
+        {
             return GetAsyncDelegate<AsyncGetModifiedTime>(ar).EndInvoke(ar);
         }
 
@@ -2546,16 +2890,19 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="path">The full or relative path to the file</param>
         /// <example><code source="..\Examples\DeleteFile.cs" lang="cs" /></example>
-        public void DeleteFile(string path) {
+        public void DeleteFile(string path)
+        {
             FtpReply reply;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 if (!(reply = Execute("DELE {0}", path.GetFtpPath())).Success)
                     throw new FtpCommandException(reply);
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
         }
@@ -2570,12 +2917,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginDeleteFile.cs" lang="cs" /></example>
-        public IAsyncResult BeginDeleteFile(string path, AsyncCallback callback, object state) {
+        public IAsyncResult BeginDeleteFile(string path, AsyncCallback callback, object state)
+        {
             IAsyncResult ar;
             AsyncDeleteFile func;
 
             ar = (func = new AsyncDeleteFile(DeleteFile)).BeginInvoke(path, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -2587,7 +2936,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="ar">IAsyncResult returned from BeginDeleteFile</param>
         /// <example><code source="..\Examples\BeginDeleteFile.cs" lang="cs" /></example>
-        public void EndDeleteFile(IAsyncResult ar) {
+        public void EndDeleteFile(IAsyncResult ar)
+        {
             GetAsyncDelegate<AsyncDeleteFile>(ar).EndInvoke(ar);
         }
 
@@ -2596,7 +2946,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="path">The full or relative path of the directory to delete</param>
         /// <example><code source="..\Examples\DeleteDirectory.cs" lang="cs" /></example>
-        public void DeleteDirectory(string path) {
+        public void DeleteDirectory(string path)
+        {
             DeleteDirectory(path, false);
         }
 
@@ -2606,7 +2957,8 @@ namespace System.Net.FtpClient {
         /// <param name="path">The full or relative path of the directory to delete</param>
         /// <param name="force">If the directory is not empty, remove its contents</param>
         /// <example><code source="..\Examples\DeleteDirectory.cs" lang="cs" /></example>
-        public void DeleteDirectory(string path, bool force) {
+        public void DeleteDirectory(string path, bool force)
+        {
             DeleteDirectory(path, force, 0);
         }
 
@@ -2619,16 +2971,21 @@ namespace System.Net.FtpClient {
         /// contents are retrieved with the force option is true. If you experience problems
         /// the file listing can be fine tuned through this parameter.</param>
         /// <example><code source="..\Examples\DeleteDirectory.cs" lang="cs" /></example>
-        public void DeleteDirectory(string path, bool force, FtpListOption options) {
+        public void DeleteDirectory(string path, bool force, FtpListOption options)
+        {
             FtpReply reply;
             string ftppath = path.GetFtpPath();
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
-                if (force) {
-                    foreach (FtpListItem item in GetListing(path, options)) {
-                        switch (item.Type) {
+                if (force)
+                {
+                    foreach (FtpListItem item in GetListing(path, options))
+                    {
+                        switch (item.Type)
+                        {
                             case FtpFileSystemObjectType.File:
                                 DeleteFile(item.FullName);
                                 break;
@@ -2649,7 +3006,8 @@ namespace System.Net.FtpClient {
                 if (!(reply = Execute("RMD {0}", ftppath)).Success)
                     throw new FtpCommandException(reply);
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
         }
@@ -2664,7 +3022,8 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginDeleteDirectory.cs" lang="cs" /></example>
-        public IAsyncResult BeginDeleteDirectory(string path, AsyncCallback callback, object state) {
+        public IAsyncResult BeginDeleteDirectory(string path, AsyncCallback callback, object state)
+        {
             return BeginDeleteDirectory(path, true, 0, callback, state);
         }
 
@@ -2677,7 +3036,8 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginDeleteDirectory.cs" lang="cs" /></example>
-        public IAsyncResult BeginDeleteDirectory(string path, bool force, AsyncCallback callback, object state) {
+        public IAsyncResult BeginDeleteDirectory(string path, bool force, AsyncCallback callback, object state)
+        {
             return BeginDeleteDirectory(path, force, 0, callback, state);
         }
 
@@ -2693,12 +3053,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginDeleteDirectory.cs" lang="cs" /></example>
-        public IAsyncResult BeginDeleteDirectory(string path, bool force, FtpListOption options, AsyncCallback callback, object state) {
+        public IAsyncResult BeginDeleteDirectory(string path, bool force, FtpListOption options, AsyncCallback callback, object state)
+        {
             AsyncDeleteDirectory func;
             IAsyncResult ar;
 
             ar = (func = new AsyncDeleteDirectory(DeleteDirectory)).BeginInvoke(path, force, options, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -2710,7 +3072,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="ar">IAsyncResult returned from BeginDeleteDirectory</param>
         /// <example><code source="..\Examples\BeginDeleteDirectory.cs" lang="cs" /></example>
-        public void EndDeleteDirectory(IAsyncResult ar) {
+        public void EndDeleteDirectory(IAsyncResult ar)
+        {
             GetAsyncDelegate<AsyncDeleteDirectory>(ar).EndInvoke(ar);
         }
 
@@ -2725,18 +3088,21 @@ namespace System.Net.FtpClient {
         /// <param name="path">The path of the directory</param>
         /// <returns>True if it exists, false otherwise.</returns>
         /// <example><code source="..\Examples\DirectoryExists.cs" lang="cs" /></example>
-        public bool DirectoryExists(string path) {
+        public bool DirectoryExists(string path)
+        {
             string pwd;
             string ftppath = path.GetFtpPath();
 
             if (ftppath == "." || ftppath == "./" || ftppath == "/")
                 return true;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
                 pwd = GetWorkingDirectory();
 
-                if (Execute("CWD {0}", ftppath).Success) {
+                if (Execute("CWD {0}", ftppath).Success)
+                {
                     FtpReply reply = Execute("CWD {0}", pwd.GetFtpPath());
 
                     if (!reply.Success)
@@ -2745,7 +3111,8 @@ namespace System.Net.FtpClient {
                     return true;
                 }
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
@@ -2762,12 +3129,14 @@ namespace System.Net.FtpClient {
         /// <param name='callback'>Async callback</param>
         /// <param name='state'>State object</param>
         /// <example><code source="..\Examples\BeginDirectoryExists.cs" lang="cs" /></example>
-        public IAsyncResult BeginDirectoryExists(string path, AsyncCallback callback, object state) {
+        public IAsyncResult BeginDirectoryExists(string path, AsyncCallback callback, object state)
+        {
             AsyncDirectoryExists func;
             IAsyncResult ar;
 
             ar = (func = new AsyncDirectoryExists(DirectoryExists)).BeginInvoke(path, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -2780,7 +3149,8 @@ namespace System.Net.FtpClient {
         /// <param name="ar">IAsyncResult returned from BeginDirectoryExists</param>
         /// <returns>True if the directory exists. False otherwise.</returns>
         /// <example><code source="..\Examples\BeginDirectoryExists.cs" lang="cs" /></example>
-        public bool EndDirectoryExists(IAsyncResult ar) {
+        public bool EndDirectoryExists(IAsyncResult ar)
+        {
             return GetAsyncDelegate<AsyncDirectoryExists>(ar).EndInvoke(ar);
         }
 
@@ -2792,7 +3162,8 @@ namespace System.Net.FtpClient {
         /// <param name="path">The full or relative path to the file</param>
         /// <returns>True if the file exists</returns>
         /// <example><code source="..\Examples\FileExists.cs" lang="cs" /></example>
-        public bool FileExists(string path) {
+        public bool FileExists(string path)
+        {
             return FileExists(path, 0);
         }
 
@@ -2806,10 +3177,12 @@ namespace System.Net.FtpClient {
         /// determine if the file exists.</param>
         /// <returns>True if the file exists</returns>
         /// <example><code source="..\Examples\FileExists.cs" lang="cs" /></example>
-        public bool FileExists(string path, FtpListOption options) {
+        public bool FileExists(string path, FtpListOption options)
+        {
             string dirname = path.GetFtpDirectoryName();
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 if (!DirectoryExists(dirname))
@@ -2819,7 +3192,8 @@ namespace System.Net.FtpClient {
                     if (item.Type == FtpFileSystemObjectType.File && item.Name == path.GetFtpFileName())
                         return true;
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
@@ -2838,7 +3212,8 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginFileExists.cs" lang="cs" /></example>
-        public IAsyncResult BeginFileExists(string path, AsyncCallback callback, object state) {
+        public IAsyncResult BeginFileExists(string path, AsyncCallback callback, object state)
+        {
             return BeginFileExists(path, 0, callback, state);
         }
 
@@ -2854,12 +3229,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginFileExists.cs" lang="cs" /></example>
-        public IAsyncResult BeginFileExists(string path, FtpListOption options, AsyncCallback callback, object state) {
+        public IAsyncResult BeginFileExists(string path, FtpListOption options, AsyncCallback callback, object state)
+        {
             AsyncFileExists func;
             IAsyncResult ar;
 
             ar = (func = new AsyncFileExists(FileExists)).BeginInvoke(path, options, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -2872,7 +3249,8 @@ namespace System.Net.FtpClient {
         /// <param name="ar">IAsyncResult returned from BeginFileExists</param>
         /// <returns>True if the file exists</returns>
         /// <example><code source="..\Examples\BeginFileExists.cs" lang="cs" /></example>
-        public bool EndFileExists(IAsyncResult ar) {
+        public bool EndFileExists(IAsyncResult ar)
+        {
             return GetAsyncDelegate<AsyncFileExists>(ar).EndInvoke(ar);
         }
 
@@ -2882,7 +3260,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="path">The full or relative path to the new directory</param>
         /// <example><code source="..\Examples\CreateDirectory.cs" lang="cs" /></example>
-        public void CreateDirectory(string path) {
+        public void CreateDirectory(string path)
+        {
             CreateDirectory(path, true);
         }
 
@@ -2892,19 +3271,22 @@ namespace System.Net.FtpClient {
         /// <param name="path">The full or relative path to the directory to create</param>
         /// <param name="force">Try to force all non-existant pieces of the path to be created</param>
         /// <example><code source="..\Examples\CreateDirectory.cs" lang="cs" /></example>
-        public void CreateDirectory(string path, bool force) {
+        public void CreateDirectory(string path, bool force)
+        {
             FtpReply reply;
             string ftppath = path.GetFtpPath();
 
             if (ftppath == "." || ftppath == "./" || ftppath == "/")
                 return;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 path = path.GetFtpPath().TrimEnd('/');
 
-                if (force && !DirectoryExists(path.GetFtpDirectoryName())) {
+                if (force && !DirectoryExists(path.GetFtpDirectoryName()))
+                {
                     FtpTrace.WriteLine(string.Format(
                         "CreateDirectory(\"{0}\", {1}): Create non-existent parent: {2}",
                         path, force, path.GetFtpDirectoryName()));
@@ -2919,7 +3301,8 @@ namespace System.Net.FtpClient {
                 if (!(reply = Execute("MKD {0}", ftppath)).Success)
                     throw new FtpCommandException(reply);
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
         }
@@ -2934,7 +3317,8 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginCreateDirectory.cs" lang="cs" /></example>
-        public IAsyncResult BeginCreateDirectory(string path, AsyncCallback callback, object state) {
+        public IAsyncResult BeginCreateDirectory(string path, AsyncCallback callback, object state)
+        {
             return BeginCreateDirectory(path, true, callback, state);
         }
 
@@ -2947,12 +3331,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginCreateDirectory.cs" lang="cs" /></example>
-        public IAsyncResult BeginCreateDirectory(string path, bool force, AsyncCallback callback, object state) {
+        public IAsyncResult BeginCreateDirectory(string path, bool force, AsyncCallback callback, object state)
+        {
             AsyncCreateDirectory func;
             IAsyncResult ar;
 
             ar = (func = new AsyncCreateDirectory(CreateDirectory)).BeginInvoke(path, force, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -2964,7 +3350,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="ar">IAsyncResult returned from BeginCreateDirectory</param>
         /// <example><code source="..\Examples\BeginCreateDirectory.cs" lang="cs" /></example>
-        public void EndCreateDirectory(IAsyncResult ar) {
+        public void EndCreateDirectory(IAsyncResult ar)
+        {
             GetAsyncDelegate<AsyncCreateDirectory>(ar).EndInvoke(ar);
         }
 
@@ -2974,10 +3361,12 @@ namespace System.Net.FtpClient {
         /// <param name="path">The full or relative path to the object</param>
         /// <param name="dest">The old or new full or relative path including the new name of the object</param>
         /// <example><code source="..\Examples\Rename.cs" lang="cs" /></example>
-        public void Rename(string path, string dest) {
+        public void Rename(string path, string dest)
+        {
             FtpReply reply;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 if (!(reply = Execute("RNFR {0}", path.GetFtpPath())).Success)
@@ -2986,7 +3375,8 @@ namespace System.Net.FtpClient {
                 if (!(reply = Execute("RNTO {0}", dest.GetFtpPath())).Success)
                     throw new FtpCommandException(reply);
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
         }
@@ -3002,12 +3392,14 @@ namespace System.Net.FtpClient {
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
         /// <example><code source="..\Examples\BeginRename.cs" lang="cs" /></example>
-        public IAsyncResult BeginRename(string path, string dest, AsyncCallback callback, object state) {
+        public IAsyncResult BeginRename(string path, string dest, AsyncCallback callback, object state)
+        {
             AsyncRename func;
             IAsyncResult ar;
 
             ar = (func = new AsyncRename(Rename)).BeginInvoke(path, dest, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -3019,7 +3411,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="ar">IAsyncResult returned from BeginRename</param>
         /// <example><code source="..\Examples\BeginRename.cs" lang="cs" /></example>
-        public void EndRename(IAsyncResult ar) {
+        public void EndRename(IAsyncResult ar)
+        {
             GetAsyncDelegate<AsyncRename>(ar).EndInvoke(ar);
         }
 
@@ -3031,15 +3424,19 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <returns>The FtpHashType flag or FtpHashType.NONE if there was a problem.</returns>
         /// <example><code source="..\Examples\GetHashAlgorithm.cs" lang="cs" /></example>
-        public FtpHashAlgorithm GetHashAlgorithm() {
+        public FtpHashAlgorithm GetHashAlgorithm()
+        {
             FtpReply reply;
             FtpHashAlgorithm type = FtpHashAlgorithm.NONE;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
-                if ((reply = Execute("OPTS HASH")).Success) {
-                    switch (reply.Message) {
+                if ((reply = Execute("OPTS HASH")).Success)
+                {
+                    switch (reply.Message)
+                    {
                         case "SHA-1":
                             type = FtpHashAlgorithm.SHA1;
                             break;
@@ -3055,7 +3452,8 @@ namespace System.Net.FtpClient {
                     }
                 }
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
@@ -3070,12 +3468,14 @@ namespace System.Net.FtpClient {
         /// <param name="callback">Async callback</param>
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
-        public IAsyncResult BeginGetHashAlgorithm(AsyncCallback callback, object state) {
+        public IAsyncResult BeginGetHashAlgorithm(AsyncCallback callback, object state)
+        {
             AsyncGetHashAlgorithm func;
             IAsyncResult ar;
 
             ar = (func = new AsyncGetHashAlgorithm(GetHashAlgorithm)).BeginInvoke(callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -3086,7 +3486,8 @@ namespace System.Net.FtpClient {
         /// Ends a call to BeginGetHashAlgorithm
         /// </summary>
         /// <param name="ar">IAsyncResult returned from BeginGetHashAlgorithm</param>
-        public FtpHashAlgorithm EndGetHashAlgorithm(IAsyncResult ar) {
+        public FtpHashAlgorithm EndGetHashAlgorithm(IAsyncResult ar)
+        {
             return GetAsyncDelegate<AsyncGetHashAlgorithm>(ar).EndInvoke(ar);
         }
 
@@ -3103,17 +3504,20 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="type">Hash Algorithm</param>
         /// <example><code source="..\Examples\SetHashAlgorithm.cs" lang="cs" /></example>
-        public void SetHashAlgorithm(FtpHashAlgorithm type) {
+        public void SetHashAlgorithm(FtpHashAlgorithm type)
+        {
             FtpReply reply;
             string algorithm;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 if ((HashAlgorithms & type) != type)
                     throw new NotImplementedException(string.Format("The hash algorithm {0} was not advertised by the server.", type.ToString()));
 
-                switch (type) {
+                switch (type)
+                {
                     case FtpHashAlgorithm.SHA1:
                         algorithm = "SHA-1";
                         break;
@@ -3134,7 +3538,8 @@ namespace System.Net.FtpClient {
                 if (!(reply = Execute("OPTS HASH {0}", algorithm)).Success)
                     throw new FtpCommandException(reply);
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
         }
@@ -3148,12 +3553,14 @@ namespace System.Net.FtpClient {
         /// <param name="callback">Async Callback</param>
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
-        public IAsyncResult BeginSetHashAlgorithm(FtpHashAlgorithm type, AsyncCallback callback, object state) {
+        public IAsyncResult BeginSetHashAlgorithm(FtpHashAlgorithm type, AsyncCallback callback, object state)
+        {
             AsyncSetHashAlgorithm func;
             IAsyncResult ar;
 
             ar = (func = new AsyncSetHashAlgorithm(SetHashAlgorithm)).BeginInvoke(type, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -3164,7 +3571,8 @@ namespace System.Net.FtpClient {
         /// Ends an asynchronous call to BeginSetHashAlgorithm
         /// </summary>
         /// <param name="ar">IAsyncResult returned from BeginSetHashAlgorithm</param>
-        public void EndSetHashAlgorithm(IAsyncResult ar) {
+        public void EndSetHashAlgorithm(IAsyncResult ar)
+        {
             GetAsyncDelegate<AsyncSetHashAlgorithm>(ar).EndInvoke(ar);
         }
 
@@ -3186,7 +3594,8 @@ namespace System.Net.FtpClient {
         /// <param name="path">Full or relative path of the object to compute the hash for.</param>
         /// <returns>The hash of the file.</returns>
         /// <example><code source="..\Examples\GetHash.cs" lang="cs" /></example>
-        public FtpHash GetHash(string path) {
+        public FtpHash GetHash(string path)
+        {
             FtpReply reply;
             FtpHash hash = new FtpHash();
             Match m;
@@ -3194,13 +3603,15 @@ namespace System.Net.FtpClient {
             if (path == null)
                 throw new ArgumentException("GetHash(path) argument can't be null");
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 if (!(reply = Execute("HASH {0}", path.GetFtpPath())).Success)
                     throw new FtpCommandException(reply);
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
 
@@ -3210,15 +3621,18 @@ namespace System.Net.FtpClient {
                     @"(?<algorithm>.+)\s" +
                     @"(?<bytestart>\d+)-(?<byteend>\d+)\s" +
                     @"(?<hash>.+)\s" +
-                    @"(?<filename>.+)")).Success) {
+                    @"(?<filename>.+)")).Success)
+            {
 
                 // Current version of FileZilla returns this:
                 // SHA-1 21c2ca15cf570582949eb59fb78038b9c27ffcaf 
                 m = Regex.Match(reply.Message, @"(?<algorithm>.+)\s(?<hash>.+)\s");
             }
 
-            if (m != null && m.Success) {
-                switch (m.Groups["algorithm"].Value) {
+            if (m != null && m.Success)
+            {
+                switch (m.Groups["algorithm"].Value)
+                {
                     case "SHA-1":
                         hash.Algorithm = FtpHashAlgorithm.SHA1;
                         break;
@@ -3237,7 +3651,8 @@ namespace System.Net.FtpClient {
 
                 hash.Value = m.Groups["hash"].Value;
             }
-            else {
+            else
+            {
                 FtpTrace.WriteLine("Failed to parse hash from: {0}", reply.Message);
             }
 
@@ -3253,12 +3668,14 @@ namespace System.Net.FtpClient {
         /// <param name="callback">AsyncCallback</param>
         /// <param name="state">State object</param>
         /// <returns>IAsyncResult</returns>
-        public IAsyncResult BeginGetHash(string path, AsyncCallback callback, object state) {
+        public IAsyncResult BeginGetHash(string path, AsyncCallback callback, object state)
+        {
             AsyncGetHash func;
             IAsyncResult ar;
 
             ar = (func = new AsyncGetHash(GetHash)).BeginInvoke(path, callback, state);
-            lock (m_asyncmethods) {
+            lock (m_asyncmethods)
+            {
                 m_asyncmethods.Add(ar, func);
             }
 
@@ -3269,7 +3686,8 @@ namespace System.Net.FtpClient {
         /// Ends an asynchronous call to BeginGetHash
         /// </summary>
         /// <param name="ar">IAsyncResult returned from BeginGetHash</param>
-        public void EndGetHash(IAsyncResult ar) {
+        public void EndGetHash(IAsyncResult ar)
+        {
             GetAsyncDelegate<AsyncGetHash>(ar).EndInvoke(ar);
         }
 
@@ -3278,10 +3696,12 @@ namespace System.Net.FtpClient {
         /// back to ASCII. If the server returns an error when trying
         /// to turn UTF8 off a FtpCommandException will be thrown.
         /// </summary>
-        public void DisableUTF8() {
+        public void DisableUTF8()
+        {
             FtpReply reply;
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 if (!(reply = Execute("OPTS UTF8 OFF")).Success)
@@ -3289,7 +3709,8 @@ namespace System.Net.FtpClient {
 
                 m_textEncoding = Encoding.ASCII;
             }
-            finally {
+            finally
+            {
                 m_lock.ReleaseMutex();
             }
         }
@@ -3298,32 +3719,41 @@ namespace System.Net.FtpClient {
         /// Disconnects from the server, releases resources held by this
         /// object.
         /// </summary>
-        public void Dispose() {
+        public void Dispose()
+        {
             FtpTrace.WriteLine("Disposing FtpClient object...");
 
-            try {
+            try
+            {
                 m_lock.WaitOne();
 
                 if (IsDisposed)
                     return;
 
-                try {
-                    if (IsConnected) {
+                try
+                {
+                    if (IsConnected)
+                    {
                         Disconnect();
                     }
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     FtpTrace.WriteLine("FtpClient.Dispose(): Caught and discarded an exception while disconnecting from host: {0}", ex.ToString());
                 }
 
-                if (m_stream != null) {
-                    try {
+                if (m_stream != null)
+                {
+                    try
+                    {
                         m_stream.Dispose();
                     }
-                    catch (Exception ex) {
+                    catch (Exception ex)
+                    {
                         FtpTrace.WriteLine("FtpClient.Dispose(): Caught and discarded an exception while disposing FtpStream object: {0}", ex.ToString());
                     }
-                    finally {
+                    finally
+                    {
                         m_stream = null;
                     }
                 }
@@ -3333,7 +3763,8 @@ namespace System.Net.FtpClient {
                 m_host = null;
                 m_asyncmethods.Clear();
             }
-            finally {
+            finally
+            {
                 IsDisposed = true;
                 m_lock.ReleaseMutex();
             }
@@ -3342,7 +3773,8 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Finalizer
         /// </summary>
-        ~FtpClient() {
+        ~FtpClient()
+        {
             Dispose();
         }
 
@@ -3358,13 +3790,15 @@ namespace System.Net.FtpClient {
         /// <param name="uri">The URI to parse</param>
         /// <param name="checkcertificate">Indicates if a ssl certificate should be validated when using FTPS schemes</param>
         /// <returns>FtpClient object</returns>
-        public static FtpClient Connect(Uri uri, bool checkcertificate) {
+        public static FtpClient Connect(Uri uri, bool checkcertificate)
+        {
             FtpClient cl = new FtpClient();
 
             if (uri == null)
                 throw new ArgumentException("Invalid URI object");
 
-            switch (uri.Scheme.ToLower()) {
+            switch (uri.Scheme.ToLower())
+            {
                 case "ftp":
                 case "ftps":
                     break;
@@ -3375,8 +3809,10 @@ namespace System.Net.FtpClient {
             cl.Host = uri.Host;
             cl.Port = uri.Port;
 
-            if (uri.UserInfo != null && uri.UserInfo.Length > 0) {
-                if (uri.UserInfo.Contains(":")) {
+            if (uri.UserInfo != null && uri.UserInfo.Length > 0)
+            {
+                if (uri.UserInfo.Contains(":"))
+                {
                     string[] parts = uri.UserInfo.Split(':');
 
                     if (parts.Length != 2)
@@ -3387,13 +3823,15 @@ namespace System.Net.FtpClient {
                 else
                     cl.Credentials = new NetworkCredential(HttpUtility.UrlDecode(uri.UserInfo), "");
             }
-            else {
+            else
+            {
                 // if no credentials were supplied just make up
                 // some for anonymous authentication.
                 cl.Credentials = new NetworkCredential("ftp", "ftp");
             }
 
-            cl.ValidateCertificate += new FtpSslValidation(delegate(FtpClient control, FtpSslValidationEventArgs e) {
+            cl.ValidateCertificate += new FtpSslValidation(delegate(FtpClient control, FtpSslValidationEventArgs e)
+            {
                 if (e.PolicyErrors != Security.SslPolicyErrors.None && checkcertificate)
                     e.Accept = false;
                 else
@@ -3414,7 +3852,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="uri">The URI to parse</param>
         /// <returns>FtpClient object</returns>
-        public static FtpClient Connect(Uri uri) {
+        public static FtpClient Connect(Uri uri)
+        {
             return Connect(uri, true);
         }
 
@@ -3427,7 +3866,8 @@ namespace System.Net.FtpClient {
         /// <param name="restart">Restart location</param>
         /// <returns>Stream object</returns>
         /// <example><code source="..\Examples\OpenReadURI.cs" lang="cs" /></example>
-        public static Stream OpenRead(Uri uri, bool checkcertificate, FtpDataType datatype, long restart) {
+        public static Stream OpenRead(Uri uri, bool checkcertificate, FtpDataType datatype, long restart)
+        {
             FtpClient cl = null;
 
             if (uri.PathAndQuery == null || uri.PathAndQuery.Length == 0)
@@ -3450,7 +3890,8 @@ namespace System.Net.FtpClient {
         /// <param name="datatype">ASCII/Binary mode</param>
         /// <returns>Stream object</returns>
         /// <example><code source="..\Examples\OpenReadURI.cs" lang="cs" /></example>
-        public static Stream OpenRead(Uri uri, bool checkcertificate, FtpDataType datatype) {
+        public static Stream OpenRead(Uri uri, bool checkcertificate, FtpDataType datatype)
+        {
             return OpenRead(uri, checkcertificate, datatype, 0);
         }
 
@@ -3461,7 +3902,8 @@ namespace System.Net.FtpClient {
         /// <param name="checkcertificate">Indicates if a ssl certificate should be validated when using FTPS schemes</param>
         /// <returns>Stream object</returns>
         /// <example><code source="..\Examples\OpenReadURI.cs" lang="cs" /></example>
-        public static Stream OpenRead(Uri uri, bool checkcertificate) {
+        public static Stream OpenRead(Uri uri, bool checkcertificate)
+        {
             return OpenRead(uri, checkcertificate, FtpDataType.Binary, 0);
         }
 
@@ -3471,7 +3913,8 @@ namespace System.Net.FtpClient {
         /// <param name="uri">FTP/FTPS URI pointing at a file</param>
         /// <returns>Stream object</returns>
         /// <example><code source="..\Examples\OpenReadURI.cs" lang="cs" /></example>
-        public static Stream OpenRead(Uri uri) {
+        public static Stream OpenRead(Uri uri)
+        {
             return OpenRead(uri, true, FtpDataType.Binary, 0);
         }
 
@@ -3483,7 +3926,8 @@ namespace System.Net.FtpClient {
         /// <param name="datatype">ASCII/Binary mode</param> 
         /// <returns>Stream object</returns>
         /// <example><code source="..\Examples\OpenWriteURI.cs" lang="cs" /></example>
-        public static Stream OpenWrite(Uri uri, bool checkcertificate, FtpDataType datatype) {
+        public static Stream OpenWrite(Uri uri, bool checkcertificate, FtpDataType datatype)
+        {
             FtpClient cl = null;
 
             if (uri.PathAndQuery == null || uri.PathAndQuery.Length == 0)
@@ -3505,7 +3949,8 @@ namespace System.Net.FtpClient {
         /// <param name="checkcertificate">Indicates if a ssl certificate should be validated when using FTPS schemes</param>
         /// <returns>Stream object</returns>
         /// <example><code source="..\Examples\OpenWriteURI.cs" lang="cs" /></example>
-        public static Stream OpenWrite(Uri uri, bool checkcertificate) {
+        public static Stream OpenWrite(Uri uri, bool checkcertificate)
+        {
             return OpenWrite(uri, checkcertificate, FtpDataType.Binary);
         }
 
@@ -3515,7 +3960,8 @@ namespace System.Net.FtpClient {
         /// <param name="uri">FTP/FTPS URI pointing at a file</param>
         /// <returns>Stream object</returns>
         /// <example><code source="..\Examples\OpenWriteURI.cs" lang="cs" /></example>
-        public static Stream OpenWrite(Uri uri) {
+        public static Stream OpenWrite(Uri uri)
+        {
             return OpenWrite(uri, true, FtpDataType.Binary);
         }
 
@@ -3527,7 +3973,8 @@ namespace System.Net.FtpClient {
         /// <param name="datatype">ASCII/Binary mode</param>
         /// <returns>Stream object</returns>
         /// <example><code source="..\Examples\OpenAppendURI.cs" lang="cs" /></example>
-        public static Stream OpenAppend(Uri uri, bool checkcertificate, FtpDataType datatype) {
+        public static Stream OpenAppend(Uri uri, bool checkcertificate, FtpDataType datatype)
+        {
             FtpClient cl = null;
 
             if (uri.PathAndQuery == null || uri.PathAndQuery.Length == 0)
@@ -3549,7 +3996,8 @@ namespace System.Net.FtpClient {
         /// <param name="checkcertificate">Indicates if a ssl certificate should be validated when using FTPS schemes</param>
         /// <returns>Stream object</returns>
         /// <example><code source="..\Examples\OpenAppendURI.cs" lang="cs" /></example>
-        public static Stream OpenAppend(Uri uri, bool checkcertificate) {
+        public static Stream OpenAppend(Uri uri, bool checkcertificate)
+        {
             return OpenAppend(uri, checkcertificate, FtpDataType.Binary);
         }
 
@@ -3559,7 +4007,8 @@ namespace System.Net.FtpClient {
         /// <param name="uri">FTP/FTPS URI pointing at a file</param>
         /// <returns>Stream object</returns>
         /// <example><code source="..\Examples\OpenAppendURI.cs" lang="cs" /></example>
-        public static Stream OpenAppend(Uri uri) {
+        public static Stream OpenAppend(Uri uri)
+        {
             return OpenAppend(uri, true, FtpDataType.Binary);
         }
 
@@ -3567,7 +4016,8 @@ namespace System.Net.FtpClient {
         /// Used internally to mark properties in the control connection that
         /// should be cloned when opening a data connection.
         /// </summary>
-        sealed class FtpControlConnectionClone : Attribute {
+        sealed class FtpControlConnectionClone : Attribute
+        {
         }
     }
 }
