@@ -8,7 +8,8 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace System.Net.FtpClient {
+namespace System.Net.FtpClient
+{
     /// <summary>
     /// Event fired if a bad SSL certificate is encountered. This even is used internally; if you
     /// don't have a specific reason for using it you are probably looking for FtpSslValidation.
@@ -20,16 +21,20 @@ namespace System.Net.FtpClient {
     /// <summary>
     /// Event args for the FtpSslValidationError delegate
     /// </summary>
-    public class FtpSslValidationEventArgs : EventArgs {
+    public class FtpSslValidationEventArgs : EventArgs
+    {
         X509Certificate m_certificate = null;
         /// <summary>
         /// The certificate to be validated
         /// </summary>
-        public X509Certificate Certificate {
-            get {
+        public X509Certificate Certificate
+        {
+            get
+            {
                 return m_certificate;
             }
-            set {
+            set
+            {
                 m_certificate = value;
             }
         }
@@ -38,11 +43,14 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// The certificate chain
         /// </summary>
-        public X509Chain Chain {
-            get {
+        public X509Chain Chain
+        {
+            get
+            {
                 return m_chain;
             }
-            set {
+            set
+            {
                 m_chain = value;
             }
         }
@@ -51,11 +59,14 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Validation errors, if any.
         /// </summary>
-        public SslPolicyErrors PolicyErrors {
-            get {
+        public SslPolicyErrors PolicyErrors
+        {
+            get
+            {
                 return m_policyErrors;
             }
-            set {
+            set
+            {
                 m_policyErrors = value;
             }
         }
@@ -66,11 +77,14 @@ namespace System.Net.FtpClient {
         /// value is false. If the certificate is not accepted, an AuthenticationException will
         /// be thrown.
         /// </summary>
-        public bool Accept {
-            get {
+        public bool Accept
+        {
+            get
+            {
                 return m_accept;
             }
-            set {
+            set
+            {
                 m_accept = value;
             }
         }
@@ -79,7 +93,8 @@ namespace System.Net.FtpClient {
     /// <summary>
     /// Stream class used for talking. Used by FtpClient, extended by FtpDataStream
     /// </summary>
-    public class FtpSocketStream : Stream, IDisposable {
+    public class FtpSocketStream : Stream, IDisposable
+    {
         /// <summary>
         /// Used for tacking read/write activity on the socket
         /// to determine if Poll() should be used to test for
@@ -95,11 +110,14 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// The socket used for talking
         /// </summary>
-        protected Socket Socket {
-            get {
+        protected Socket Socket
+        {
+            get
+            {
                 return m_socket;
             }
-            private set {
+            private set
+            {
                 m_socket = value;
             }
         }
@@ -114,7 +132,8 @@ namespace System.Net.FtpClient {
         /// interval to 0 disables Poll()'ing all together.
         /// The default value is 15 seconds.
         /// </summary>
-        public int SocketPollInterval {
+        public int SocketPollInterval
+        {
             get { return m_socketPollInterval; }
             set { m_socketPollInterval = value; }
         }
@@ -125,8 +144,10 @@ namespace System.Net.FtpClient {
         /// by FtpClient in an effort to detect disconnections and gracefully
         /// reconnect the control connection.
         /// </summary>
-        internal int SocketDataAvailable {
-            get {
+        internal int SocketDataAvailable
+        {
+            get
+            {
                 if (m_socket != null)
                     return m_socket.Available;
                 return 0;
@@ -136,36 +157,47 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Gets a value indicating if this socket stream is connected
         /// </summary>
-        public bool IsConnected {
-            get {
-                try {
+        public bool IsConnected
+        {
+            get
+            {
+                try
+                {
                     if (m_socket == null)
                         return false;
 
-                    if (!m_socket.Connected) {
+                    if (!m_socket.Connected)
+                    {
                         Close();
                         return false;
                     }
 
-                    if (!CanRead || !CanWrite) {
+                    if (!CanRead || !CanWrite)
+                    {
                         Close();
                         return false;
                     }
 
-                    if (m_socketPollInterval > 0 && DateTime.Now.Subtract(m_lastActivity).TotalMilliseconds > m_socketPollInterval) {
+                    if (m_socketPollInterval > 0 && DateTime.Now.Subtract(m_lastActivity).TotalMilliseconds > m_socketPollInterval)
+                    {
                         FtpTrace.WriteLine("Testing connectivity using Socket.Poll()...");
-                        if (m_socket.Poll(500000, SelectMode.SelectRead) && m_socket.Available == 0) {
+                        if (m_socket.Poll(500000, SelectMode.SelectRead) && m_socket.Available == 0)
+                        {
                             Close();
                             return false;
                         }
+
+                        m_lastActivity = DateTime.Now;
                     }
                 }
-                catch (SocketException sockex) {
+                catch (SocketException sockex)
+                {
                     Close();
                     FtpTrace.WriteLine("FtpSocketStream.IsConnected: Caught and discarded SocketException while testing for connectivity: {0}", sockex.ToString());
                     return false;
                 }
-                catch (IOException ioex) {
+                catch (IOException ioex)
+                {
                     Close();
                     FtpTrace.WriteLine("FtpSocketStream.IsConnected: Caught and discarded IOException while testing for connectivity: {0}", ioex.ToString());
                     return false;
@@ -178,8 +210,10 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Gets a value indicating if encryption is being used
         /// </summary>
-        public bool IsEncrypted {
-            get {
+        public bool IsEncrypted
+        {
+            get
+            {
                 return m_sslStream != null;
             }
         }
@@ -188,11 +222,14 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// The non-encrypted stream
         /// </summary>
-        private NetworkStream NetworkStream {
-            get {
+        private NetworkStream NetworkStream
+        {
+            get
+            {
                 return m_netStream;
             }
-            set {
+            set
+            {
                 m_netStream = value;
             }
         }
@@ -201,11 +238,14 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// The encrypted stream
         /// </summary>
-        private SslStream SslStream {
-            get {
+        private SslStream SslStream
+        {
+            get
+            {
                 return m_sslStream;
             }
-            set {
+            set
+            {
                 m_sslStream = value;
             }
         }
@@ -213,8 +253,10 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Underlying stream, could be a NetworkStream or SslStream
         /// </summary>
-        protected Stream BaseStream {
-            get {
+        protected Stream BaseStream
+        {
+            get
+            {
                 if (m_sslStream != null)
                     return m_sslStream;
                 else if (m_netStream != null)
@@ -227,8 +269,10 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Gets a value indicating if this stream can be read
         /// </summary>
-        public override bool CanRead {
-            get {
+        public override bool CanRead
+        {
+            get
+            {
                 if (m_netStream != null)
                     return m_netStream.CanRead;
                 return false;
@@ -238,8 +282,10 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Gets a value indicating if this stream if seekable
         /// </summary>
-        public override bool CanSeek {
-            get {
+        public override bool CanSeek
+        {
+            get
+            {
                 return false;
             }
         }
@@ -247,8 +293,10 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Gets a value indicating if this stream can be written to
         /// </summary>
-        public override bool CanWrite {
-            get {
+        public override bool CanWrite
+        {
+            get
+            {
                 if (m_netStream != null)
                     return m_netStream.CanWrite;
 
@@ -259,8 +307,10 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Gets the length of the stream
         /// </summary>
-        public override long Length {
-            get {
+        public override long Length
+        {
+            get
+            {
                 return 0;
             }
         }
@@ -269,13 +319,16 @@ namespace System.Net.FtpClient {
         /// Gets the current position of the stream. Trying to
         /// set this property throws an InvalidOperationException()
         /// </summary>
-        public override long Position {
-            get {
+        public override long Position
+        {
+            get
+            {
                 if (BaseStream != null)
                     return BaseStream.Position;
                 return 0;
             }
-            set {
+            set
+            {
                 throw new InvalidOperationException();
             }
         }
@@ -284,11 +337,14 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Event is fired when a SSL certificate needs to be validated
         /// </summary>
-        public event FtpSocketStreamSslValidation ValidateCertificate {
-            add {
+        public event FtpSocketStreamSslValidation ValidateCertificate
+        {
+            add
+            {
                 m_sslvalidate += value;
             }
-            remove {
+            remove
+            {
                 m_sslvalidate -= value;
             }
         }
@@ -298,11 +354,14 @@ namespace System.Net.FtpClient {
         /// Gets or sets the amount of time to wait for a read operation to complete. Default
         /// value is Timeout.Infinite.
         /// </summary>
-        public override int ReadTimeout {
-            get {
+        public override int ReadTimeout
+        {
+            get
+            {
                 return m_readTimeout;
             }
-            set {
+            set
+            {
                 m_readTimeout = value;
             }
         }
@@ -313,11 +372,14 @@ namespace System.Net.FtpClient {
         /// for a connection succeed before giving up. The default
         /// is 30000 (30 seconds).
         /// </summary>
-        public int ConnectTimeout {
-            get {
+        public int ConnectTimeout
+        {
+            get
+            {
                 return m_connectTimeout;
             }
-            set {
+            set
+            {
                 m_connectTimeout = value;
             }
         }
@@ -325,8 +387,10 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Gets the local end point of the socket
         /// </summary>
-        public IPEndPoint LocalEndPoint {
-            get {
+        public IPEndPoint LocalEndPoint
+        {
+            get
+            {
                 if (m_socket == null)
                     return null;
                 return (IPEndPoint)m_socket.LocalEndPoint;
@@ -336,8 +400,10 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Gets the remote end point of the socket
         /// </summary>
-        public IPEndPoint RemoteEndPoint {
-            get {
+        public IPEndPoint RemoteEndPoint
+        {
+            get
+            {
                 if (m_socket == null)
                     return null;
                 return (IPEndPoint)m_socket.RemoteEndPoint;
@@ -351,11 +417,14 @@ namespace System.Net.FtpClient {
         /// <param name="chain">Certificate chain</param>
         /// <param name="errors">Policy errors if any</param>
         /// <returns>True if it was accepted, false otherwise</returns>
-        protected bool OnValidateCertificate(X509Certificate certificate, X509Chain chain, SslPolicyErrors errors) {
+        protected bool OnValidateCertificate(X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
+        {
             FtpSocketStreamSslValidation evt = m_sslvalidate;
 
-            if (evt != null) {
-                FtpSslValidationEventArgs e = new FtpSslValidationEventArgs() {
+            if (evt != null)
+            {
+                FtpSslValidationEventArgs e = new FtpSslValidationEventArgs()
+                {
                     Certificate = certificate,
                     Chain = chain,
                     PolicyErrors = errors,
@@ -377,7 +446,8 @@ namespace System.Net.FtpClient {
         /// <param name="offset">Ignored</param>
         /// <param name="origin">Ignored</param>
         /// <returns></returns>
-        public override long Seek(long offset, SeekOrigin origin) {
+        public override long Seek(long offset, SeekOrigin origin)
+        {
             throw new InvalidOperationException();
         }
 
@@ -385,14 +455,16 @@ namespace System.Net.FtpClient {
         /// Throws an InvalidOperationException
         /// </summary>
         /// <param name="value">Ignored</param>
-        public override void SetLength(long value) {
+        public override void SetLength(long value)
+        {
             throw new InvalidOperationException();
         }
 
         /// <summary>
         /// Flushes the stream
         /// </summary>
-        public override void Flush() {
+        public override void Flush()
+        {
             if (!IsConnected)
                 throw new InvalidOperationException("The FtpSocketStream object is not connected.");
 
@@ -407,10 +479,12 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="buffer">The buffer to read into</param>
         /// <returns>The number of bytes read</returns>
-        internal int RawSocketRead(byte[] buffer) {
+        internal int RawSocketRead(byte[] buffer)
+        {
             int read = 0;
 
-            if (m_socket != null && m_socket.Connected) {
+            if (m_socket != null && m_socket.Connected)
+            {
                 read = m_socket.Receive(buffer, buffer.Length, 0);
             }
 
@@ -424,7 +498,8 @@ namespace System.Net.FtpClient {
         /// <param name="offset">Where in the buffer to start</param>
         /// <param name="count">Number of bytes to be read</param>
         /// <returns></returns>
-        public override int Read(byte[] buffer, int offset, int count) {
+        public override int Read(byte[] buffer, int offset, int count)
+        {
             IAsyncResult ar = null;
 
             if (BaseStream == null)
@@ -432,7 +507,8 @@ namespace System.Net.FtpClient {
 
             m_lastActivity = DateTime.Now;
             ar = BaseStream.BeginRead(buffer, offset, count, null, null);
-            if (!ar.AsyncWaitHandle.WaitOne(m_readTimeout, true)) {
+            if (!ar.AsyncWaitHandle.WaitOne(m_readTimeout, true))
+            {
                 Close();
                 throw new TimeoutException("Timed out trying to read data from the socket stream!");
             }
@@ -444,14 +520,17 @@ namespace System.Net.FtpClient {
         /// Reads a line from the socket
         /// </summary>
         /// <returns>A line from the stream, null if there is nothing to read</returns>
-        public string ReadLine(System.Text.Encoding encoding) {
+        public string ReadLine(System.Text.Encoding encoding)
+        {
             List<byte> data = new List<byte>();
             byte[] buf = new byte[1];
             string line = null;
 
-            while (Read(buf, 0, buf.Length) > 0) {
+            while (Read(buf, 0, buf.Length) > 0)
+            {
                 data.Add(buf[0]);
-                if ((char)buf[0] == '\n') {
+                if ((char)buf[0] == '\n')
+                {
                     line = encoding.GetString(data.ToArray()).Trim('\r', '\n');
                     break;
                 }
@@ -466,7 +545,8 @@ namespace System.Net.FtpClient {
         /// <param name="buffer">Buffer to write to stream</param>
         /// <param name="offset">Where in the buffer to start</param>
         /// <param name="count">Number of bytes to be read</param>
-        public override void Write(byte[] buffer, int offset, int count) {
+        public override void Write(byte[] buffer, int offset, int count)
+        {
             if (BaseStream == null)
                 return;
 
@@ -479,7 +559,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="encoding">Encoding used for writing the line</param>
         /// <param name="buf">The data to write</param>
-        public void WriteLine(System.Text.Encoding encoding, string buf) {
+        public void WriteLine(System.Text.Encoding encoding, string buf)
+        {
             byte[] data;
             data = encoding.GetBytes(string.Format("{0}\r\n", buf));
             Write(data, 0, data.Length);
@@ -488,7 +569,8 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Disposes the stream
         /// </summary>
-        public new void Dispose() {
+        public new void Dispose()
+        {
             FtpTrace.WriteLine("Disposing FtpSocketStream...");
             Close();
         }
@@ -496,10 +578,14 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Disconnects from server
         /// </summary>
-        public override void Close() {
-            if (m_socket != null) {
-                try {
-                    if (m_socket.Connected) {
+        public override void Close()
+        {
+            if (m_socket != null)
+            {
+                try
+                {
+                    if (m_socket.Connected)
+                    {
                         ////
                         // Calling Shutdown() with mono causes an
                         // exception if the remote host closed first
@@ -511,34 +597,44 @@ namespace System.Net.FtpClient {
                     m_socket.Dispose();
 #endif
                 }
-                catch (SocketException ex) {
+                catch (SocketException ex)
+                {
                     FtpTrace.WriteLine("Caught and discarded a SocketException while cleaning up the Socket: {0}", ex.ToString());
                 }
-                finally {
+                finally
+                {
                     m_socket = null;
                 }
             }
 
-            if (m_netStream != null) {
-                try {
+            if (m_netStream != null)
+            {
+                try
+                {
                     m_netStream.Dispose();
                 }
-                catch (IOException ex) {
+                catch (IOException ex)
+                {
                     FtpTrace.WriteLine("Caught and discarded an IOException while cleaning up the NetworkStream: {0}", ex.ToString());
                 }
-                finally {
+                finally
+                {
                     m_netStream = null;
                 }
             }
 
-            if (m_sslStream != null) {
-                try {
+            if (m_sslStream != null)
+            {
+                try
+                {
                     m_sslStream.Dispose();
                 }
-                catch (IOException ex) {
+                catch (IOException ex)
+                {
                     FtpTrace.WriteLine("Caught and discarded an IOException while cleaning up the SslStream: {0}", ex.ToString());
                 }
-                finally {
+                finally
+                {
                     m_sslStream = null;
                 }
             }
@@ -550,7 +646,8 @@ namespace System.Net.FtpClient {
         /// <param name="level">SocketOptionLevel</param>
         /// <param name="name">SocketOptionName</param>
         /// <param name="value">SocketOptionValue</param>
-        public void SetSocketOption(SocketOptionLevel level, SocketOptionName name, bool value) {
+        public void SetSocketOption(SocketOptionLevel level, SocketOptionName name, bool value)
+        {
             if (m_socket == null)
                 throw new InvalidOperationException("The underlying socket is null. Have you established a connection?");
             m_socket.SetSocketOption(level, name, value);
@@ -562,24 +659,29 @@ namespace System.Net.FtpClient {
         /// <param name="host">The host to connect to</param>
         /// <param name="port">The port to connect to</param>
         /// <param name="ipVersions">Internet Protocol versions to support durring the connection phase</param>
-        public void Connect(string host, int port, FtpIpVersion ipVersions) {
+        public void Connect(string host, int port, FtpIpVersion ipVersions)
+        {
             IAsyncResult ar = null;
             IPAddress[] addresses = Dns.GetHostAddresses(host);
 
             if (ipVersions == 0)
                 throw new ArgumentException("The ipVersions parameter must contain at least 1 flag.");
 
-            for (int i = 0; i < addresses.Length; i++) {
+            for (int i = 0; i < addresses.Length; i++)
+            {
 #if DEBUG
                 FtpTrace.WriteLine("{0}: {1}", addresses[i].AddressFamily.ToString(), addresses[i].ToString());
 #endif
                 // we don't need to do this check unless
                 // a particular version of IP has been
                 // omitted so we won't.
-                if (ipVersions != FtpIpVersion.ANY) {
-                    switch (addresses[i].AddressFamily) {
+                if (ipVersions != FtpIpVersion.ANY)
+                {
+                    switch (addresses[i].AddressFamily)
+                    {
                         case AddressFamily.InterNetwork:
-                            if ((ipVersions & FtpIpVersion.IPv4) != FtpIpVersion.IPv4) {
+                            if ((ipVersions & FtpIpVersion.IPv4) != FtpIpVersion.IPv4)
+                            {
 #if DEBUG
                                 FtpTrace.WriteLine("SKIPPED!");
 #endif
@@ -587,7 +689,8 @@ namespace System.Net.FtpClient {
                             }
                             break;
                         case AddressFamily.InterNetworkV6:
-                            if ((ipVersions & FtpIpVersion.IPv6) != FtpIpVersion.IPv6) {
+                            if ((ipVersions & FtpIpVersion.IPv6) != FtpIpVersion.IPv6)
+                            {
 #if DEBUG
                                 FtpTrace.WriteLine("SKIPPED!");
 #endif
@@ -599,7 +702,8 @@ namespace System.Net.FtpClient {
 
                 m_socket = new Socket(addresses[i].AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 ar = m_socket.BeginConnect(addresses[i], port, null, null);
-                if (!ar.AsyncWaitHandle.WaitOne(m_connectTimeout, true)) {
+                if (!ar.AsyncWaitHandle.WaitOne(m_connectTimeout, true))
+                {
                     Close();
 
                     // check to see if we're out of addresses
@@ -607,7 +711,8 @@ namespace System.Net.FtpClient {
                     if (i + 1 == addresses.Length)
                         throw new TimeoutException("Timed out trying to connect!");
                 }
-                else {
+                else
+                {
                     m_socket.EndConnect(ar);
                     // we got a connection, break out
                     // of the loop.
@@ -617,7 +722,8 @@ namespace System.Net.FtpClient {
 
             // make sure that we actually connected to
             // one of the addresses returned from GetHostAddresses()
-            if (m_socket == null || !m_socket.Connected) {
+            if (m_socket == null || !m_socket.Connected)
+            {
                 Close();
                 throw new IOException("Failed to connect to host.");
             }
@@ -632,7 +738,8 @@ namespace System.Net.FtpClient {
         /// accepted.
         /// </summary>
         /// <param name="targethost">The host to authenticate the certiciate against</param>
-        public void ActivateEncryption(string targethost) {
+        public void ActivateEncryption(string targethost)
+        {
             ActivateEncryption(targethost, null);
         }
 
@@ -643,7 +750,8 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="targethost">The host to authenticate the certiciate against</param>
         /// <param name="clientCerts">A collection of client certificates to use when authenticating the SSL stream</param>
-        public void ActivateEncryption(string targethost, X509CertificateCollection clientCerts) {
+        public void ActivateEncryption(string targethost, X509CertificateCollection clientCerts)
+        {
             if (!IsConnected)
                 throw new InvalidOperationException("The FtpSocketStream object is not connected.");
 
@@ -653,12 +761,14 @@ namespace System.Net.FtpClient {
             if (m_sslStream != null)
                 throw new InvalidOperationException("SSL Encryption has already been enabled on this stream.");
 
-            try {
+            try
+            {
                 DateTime auth_start;
                 TimeSpan auth_time_total;
 
                 m_sslStream = new SslStream(NetworkStream, true, new RemoteCertificateValidationCallback(
-                    delegate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) {
+                    delegate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+                    {
                         return OnValidateCertificate(certificate, chain, sslPolicyErrors);
                     }));
 
@@ -672,7 +782,8 @@ namespace System.Net.FtpClient {
                     auth_time_total.Seconds,
                     auth_time_total.TotalSeconds);
             }
-            catch (AuthenticationException ex) {
+            catch (AuthenticationException ex)
+            {
                 // authentication failed and in addition it left our 
                 // ssl stream in an unsuable state so cleanup needs
                 // to be done and the exception can be re-thrown for
@@ -687,8 +798,10 @@ namespace System.Net.FtpClient {
         /// </summary>
         /// <param name="address">The address to listen on</param>
         /// <param name="port">The port to listen on</param>
-        public void Listen(IPAddress address, int port) {
-            if (!IsConnected) {
+        public void Listen(IPAddress address, int port)
+        {
+            if (!IsConnected)
+            {
                 if (m_socket == null)
                     m_socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
@@ -700,7 +813,8 @@ namespace System.Net.FtpClient {
         /// <summary>
         /// Accepts a connection from a listening socket
         /// </summary>
-        public void Accept() {
+        public void Accept()
+        {
             if (m_socket != null)
                 m_socket = m_socket.Accept();
         }
@@ -711,7 +825,8 @@ namespace System.Net.FtpClient {
         /// <param name="callback"></param>
         /// <param name="state"></param>
         /// <returns></returns>
-        public IAsyncResult BeginAccept(AsyncCallback callback, object state) {
+        public IAsyncResult BeginAccept(AsyncCallback callback, object state)
+        {
             if (m_socket != null)
                 return m_socket.BeginAccept(callback, state);
             return null;
@@ -721,8 +836,10 @@ namespace System.Net.FtpClient {
         /// Completes a BeginAccept() operation
         /// </summary>
         /// <param name="ar">IAsyncResult returned from BeginAccept</param>
-        public void EndAccept(IAsyncResult ar) {
-            if (m_socket != null) {
+        public void EndAccept(IAsyncResult ar)
+        {
+            if (m_socket != null)
+            {
                 m_socket = m_socket.EndAccept(ar);
                 m_netStream = new NetworkStream(m_socket);
             }

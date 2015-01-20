@@ -2241,14 +2241,23 @@ namespace System.Net.FtpClient
                 {
                     try
                     {
-                        while ((buf = stream.ReadLine(Encoding)) != null)
+                        using (var streamReader = new StreamReader(stream))
                         {
-                            if (buf.Length > 0)
-                            {
-                                rawlisting.Add(buf);
-                                FtpTrace.WriteLine(buf);
-                            }
+                            buf = streamReader.ReadToEnd();
+                            FtpTrace.WriteLine(buf);
+                            rawlisting.AddRange(buf.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries));
                         }
+
+                        //while ((buf = stream.ReadLine(Encoding)) != null)
+                        //{
+                        //    if (buf.Length <= 0)
+                        //    {
+                        //        continue;
+                        //    }
+
+                        //    rawlisting.Add(buf);
+                        //    FtpTrace.WriteLine(buf);
+                        //}
                     }
                     finally
                     {
@@ -2291,10 +2300,7 @@ namespace System.Net.FtpClient
                         FullName = buf
                     };
 
-                    if (DirectoryExists(item.FullName))
-                        item.Type = FtpFileSystemObjectType.Directory;
-                    else
-                        item.Type = FtpFileSystemObjectType.File;
+                    item.Type = this.DirectoryExists(item.FullName) ? FtpFileSystemObjectType.Directory : FtpFileSystemObjectType.File;
 
                     lst.Add(item);
                 }
